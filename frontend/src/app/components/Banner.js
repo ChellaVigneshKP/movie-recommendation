@@ -5,39 +5,41 @@ import Image from "next/image";
 import { FaGlobe } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setEmail } from "../redux/slices/userSlice"; // Import Redux action
+import { setEmail as setReduxEmail } from "../redux/slices/userSlice";
 
 const Banner = () => {
   const router = useRouter();
-  const dispatch = useDispatch(); // Redux dispatch
-  const [email, setEmailState] = useState("");
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
 
-  // Function to validate email format
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  // Handle email change
   const handleEmailChange = (e) => {
     const newEmail = e.target.value;
-    setEmailState(newEmail);
+    setEmail(newEmail);
     setIsValid(validateEmail(newEmail));
   };
 
-  // Handle blur (when the user leaves the input field)
   const handleBlur = () => {
     setIsTouched(true);
   };
 
-  // Handle button click - Prevent navigation if email is invalid
   const handleGetStarted = () => {
     if (!isValid) {
-      setIsTouched(true); // Show error if not already touched
+      setIsTouched(true);
       return;
     }
 
-    dispatch(setEmail(email)); // Store email in Redux
-    router.push("/signup"); // Navigate to signup page
+    dispatch(setReduxEmail(email));
+    router.push("/signup");
+  };
+
+  const getBorderColor = () => {
+    if (isTouched && !isValid) return "border-red-500";
+    if (isValid) return "border-green-500";
+    return "border-gray-700";
   };
 
   return (
@@ -59,7 +61,7 @@ const Banner = () => {
           </div>
           <button
             className="bg-red-600 px-4 py-1 rounded-md text-white font-semibold"
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/login")} suppressHydrationWarning
           >
             Sign In
           </button>
@@ -78,12 +80,12 @@ const Banner = () => {
             <input
               type="email"
               placeholder="Email address"
-              className={`w-full p-4 rounded-md text-white placeholder-gray-300 outline-none border ${isTouched && !isValid ? "border-red-500" : isValid ? "border-green-500" : "border-gray-700"
-                }`}
+              className={`w-full p-4 rounded-md text-white placeholder-gray-300 outline-none border ${getBorderColor()}`}
               style={{ backgroundColor: "rgba(30, 30, 30, 0.5)" }}
               value={email}
               onChange={handleEmailChange}
               onBlur={handleBlur}
+              suppressHydrationWarning
             />
             <p className="text-red-500 text-sm mt-1 h-5">
               {isTouched && !isValid ? "Please enter a valid email address." : ""}
@@ -92,6 +94,7 @@ const Banner = () => {
           <button
             className="bg-red-600 text-white px-6 py-4 rounded-md font-semibold hover:bg-red-700 transition"
             onClick={handleGetStarted}
+            suppressHydrationWarning
           >
             Get Started →
           </button>
