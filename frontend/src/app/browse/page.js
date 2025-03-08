@@ -1,11 +1,11 @@
-import { getMovies } from "@/lib/movies"; // Server fetch function
+import { getMovies } from "@/lib/movies";
 import Banner from "./Banner";
 import Navbar from "./Navbar"
 import MovieList from "./MovieList";
 import Footer from "./Footer";
 
 export default async function BrowsePage() {
-  const movies = await getMovies(); // ✅ This runs only on the server
+  const movies = await getMovies();
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
