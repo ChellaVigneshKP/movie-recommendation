@@ -63,6 +63,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Free Memory') {
+            steps {
+                script {
+                    bat 'taskkill /F /IM node.exe /T || exit 0'
+                    bat 'taskkill /F /IM java.exe /T || exit 0'
+                }
+            }
+        }
+
     }
 
     post {
