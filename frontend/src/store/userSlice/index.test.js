@@ -1,5 +1,4 @@
-const userReducer = require('./index').default;
-const { setEmail } = require('./index');
+import userReducer, { setEmail } from './index';
 
 describe('userSlice Reducer', () => {
   it('should return the initial state', () => {
@@ -10,7 +9,7 @@ describe('userSlice Reducer', () => {
   it('should handle setEmail action', () => {
     const previousState = { email: '' };
     const newState = userReducer(previousState, setEmail('test@example.com'));
-    
+
     expect(newState.email).toBe('test@example.com');
   });
 });
