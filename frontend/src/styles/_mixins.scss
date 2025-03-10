@@ -1,0 +1,69 @@
+@use "sass:math";
+
+// Breakpoints
+$xs: 480px;
+$sm: 640px;
+$md: 768px;
+$lg: 1024px;
+$xl: 1280px;
+$xxl: 1536px;
+
+// Font-size
+$base-font-size: 16px;
+$default-min-font-size: 8px;
+$default-max-font-size: 32px;
+
+@mixin for-xxl-devices {
+  @media (max-width: $xxl) {
+    @content;
+  }
+}
+
+@mixin for-xl-devices {
+  @media (max-width: $xl) {
+    @content;
+  }
+}
+
+@mixin for-large-devices {
+  @media (max-width: $lg) {
+    @content;
+  }
+}
+
+@mixin for-tablet-screens {
+  @media (max-width: $md) {
+    @content;
+  }
+}
+
+@mixin for-mobile-only {
+  @media only screen and (max-width: $sm) and (orientation: portrait) {
+    @content;
+  }
+}
+
+@mixin fluid-type(
+  $min-font-size: $default-min-font-size,
+  $max-font-size: $default-max-font-size,
+  $lower-range: $md,
+  $upper-range: $lg
+) {
+  // Calculate the fluid font size
+  $range: $upper-range - $lower-range;
+  $size-difference: $max-font-size - $min-font-size;
+
+  font-size: calc(
+    #{$min-font-size} + (#{($size-difference)} * (100vw - #{$lower-range}) / #{$range})
+  );
+
+  // For smaller screens (below $lower-range)
+  @media screen and (max-width: $lower-range) {
+    font-size: $min-font-size;
+  }
+
+  // For larger screens (above $upper-range)
+  @media screen and (min-width: $upper-range) {
+    font-size: $max-font-size;
+  }
+}
