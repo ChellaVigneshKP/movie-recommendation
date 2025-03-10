@@ -1,6 +1,6 @@
 "use client"
 import { useContext, useState } from 'react';
-
+import Image from 'next/image';
 import styles from '../../styles/Cards.module.scss';
 import { Genre, Media } from '@/types';
 import { ModalContext } from '../../context/ModalContext';
@@ -37,7 +37,7 @@ export default function FeatureCard({ index, item }: FeatureCardProps): React.Re
       <div className={styles.rank}>{index}</div>
 
       <div className={styles.featureCard}>
-        <img src={image} alt='img' className={styles.poster} onMouseOver={onHover} onMouseOut={onMouseOut} />
+        <Image src={image} alt='img' width={70} height={70} className={styles.poster} onMouseOver={onHover} onMouseOut={onMouseOut} />
 
         <div className={styles.info}>
           <div className={styles.actionRow}>

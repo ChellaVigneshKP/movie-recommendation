@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 
 import { Media } from '@/types';
-import styles from '../../styles/Cards.module.scss';
+import styles from '@/styles/Cards.module.scss';
 
 const Cards = dynamic(() => import('./Cards'));
 const FeatureCard = dynamic(() => import('./FeatureCards'));
@@ -24,7 +24,8 @@ export default function List({
   const [media, setMedia] = useState<Media[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function getEndpoint() {
+  // Move the getEndpoint function outside of useEffect to avoid defining it on every render
+  const getEndpoint = useCallback(async () => {
     try {
       const baseUrl = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_API_BASE;
       const result = await axios.get(`${baseUrl}${endpoint}`);
@@ -34,11 +35,11 @@ export default function List({
     } finally {
       setLoading(false);
     }
-  }
+  }, [endpoint]); // Add endpoint to the dependency array of the callback function
 
   useEffect(() => {
     getEndpoint();
-  }, [endpoint]);
+  }, [getEndpoint]); // Ensure that the hook depends on the updated getEndpoint function
 
   return (
     <div className={styles.listContainer}>

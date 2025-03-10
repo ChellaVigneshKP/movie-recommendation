@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -11,7 +10,7 @@ import { CaretDown } from '@/utils/icons';
 import { UserCircle } from 'lucide-react';
 import styles from '@/styles/Navbar.module.scss';
 
-const Dialog = dynamic(import('../Dialog'))
+const Dialog = dynamic(() => import('../Dialog'), { ssr: false, loading: () => <div>Loading ...</div> });
 
 export default function Profile(): React.ReactElement {
   const [visible, setVisible] = useState<boolean>(false);

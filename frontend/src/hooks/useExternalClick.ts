@@ -1,9 +1,10 @@
 "use client";
-import { MutableRefObject, useEffect } from 'react';
+import { Maybe } from '@/types';
+import { RefObject, useEffect } from 'react';
 
-export default function useExternalClick(ref: MutableRefObject<any>, callback: () => void): void {
+export default function useExternalClick(ref: RefObject<Maybe<HTMLElement>>, callback: () => void): void {
   const onClick = (event: MouseEvent) => {
-    if (!ref?.current?.contains(event.target)) {
+    if (!ref?.current?.contains(event.target as Node)) {
       callback();
     }
   };
