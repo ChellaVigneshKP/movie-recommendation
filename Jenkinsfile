@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     dir('frontend') {
-                        sh 'npm test -- --coverage'
+                        sh 'npm run coverage'
                     }
                 }
             }
