@@ -45,8 +45,10 @@ pipeline {
                 script {
                     dir('frontend') {
                         withSonarQubeEnv('sonar-server') {
-                        bat "\"${SONARQUBE_SCANNER_PATH}/bin/sonar-scanner\""
-                    }
+                        withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
+                            bat "\"${SONARQUBE_SCANNER_PATH}\\sonar-scanner.bat\" -Dsonar.login=${SONARQUBE_TOKEN}"
+                            }
+                        }
                     }
                 }
             }
