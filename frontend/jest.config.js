@@ -1,5 +1,10 @@
-module.exports = {
+/** @type {import('jest').Config} */
+export default {
     transform: {
-        "^.+\\.jsx?$": "babel-jest",
+        "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+    },
+    extensionsToTreatAsEsm: [".ts", ".tsx"],
+    moduleNameMapper: {
+        "^@/(.*)$": "<rootDir>/src/$1",
     },
 };
