@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.9.9'
-        jdk 'JDK 21'
-        sonarScanner 'SonarScanner'
-        nodejs 'NodeJS 23'
+        Maven 'Maven 3.9.9'
+        JDK 'JDK 21'
+        SonarQubeScanner 'SonarScanner'
+        NodeJS 'NodeJS 23'
     }
 
     environment {
