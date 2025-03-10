@@ -55,8 +55,8 @@ pipeline {
                 script {
                     dir('frontend') {
                         withSonarQubeEnv('sonar-server') {
-                        withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
-                            bat "\"${SONARQUBE_SCANNER_PATH}\\bin\\sonar-scanner.bat\" -Dsonar.token=%SONARQUBE_TOKEN%"
+                            withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
+                                bat 'npm run sonar:scan -- -Dsonar.token=%SONARQUBE_TOKEN%'
                             }
                         }
                     }
