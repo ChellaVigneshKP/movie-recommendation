@@ -40,6 +40,16 @@ pipeline {
             }
         }
 
+        stage('Run Frontend Tests') {
+            steps {
+                script {
+                    dir('frontend') {
+                        sh 'npm test -- --coverage'
+                    }
+                }
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 script {
