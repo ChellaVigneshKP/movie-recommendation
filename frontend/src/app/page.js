@@ -5,9 +5,9 @@ import Image from "next/image";
 import { FaGlobe } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setEmail as setReduxEmail } from "./redux/slices/userSlice";
+import { setEmail as setReduxEmail } from "@/store/userSlice";
 
-const Banner = () => {
+const Home = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -108,4 +108,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default Home;
