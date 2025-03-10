@@ -1,13 +1,24 @@
-import { Media, MediaType, ImageType } from '../types';
-import { genres } from '../config/genres';
+import { Media, MediaType, ImageType } from '@/types';
+import { genres } from '@/config/genres';
 
-export function parse(array: any[], type: MediaType): Media[] {
+
+interface MediaElement {
+  id: number;
+  name?: string;
+  title?: string;
+  vote_average: number;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  genre_ids: number[];
+}
+export function parse(array: MediaElement[], type: MediaType): Media[] {
   const parsedResponse: Media[] = [];
 
-  array.forEach((element: any): void => {
+  array.forEach((element: MediaElement): void => {
     const resolved: Media = {
       id: element.id,
-      title: element.name || element.title,
+      title: element.name || element.title || 'Untitled',
       rating: element.vote_average,
       overview: element.overview,
       poster: getImageUrl(element.poster_path, 'poster'),

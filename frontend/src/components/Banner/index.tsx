@@ -1,18 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-
+import Image from 'next/image';
 import Button from '../Button';
 import { Media } from '@/types';
 import { Play, Info } from '@/utils/icons';
-import { ModalContext } from '../../context/ModalContext';
-import styles from '../../styles/Banner.module.scss';
-
-
+import { ModalContext } from '@/context/ModalContext';
+import styles from '@/styles/Banner.module.scss';
 
 export default function Banner() {
   const [media, setMedia] = useState<Media>();
-  const random = Math.floor(Math.random() * 20);
   const { setModalData, setIsModal } = useContext(ModalContext);
 
   const onClick = (data: Media) => {
@@ -20,20 +16,28 @@ export default function Banner() {
     setIsModal(true);
   };
 
-  const getMedia = async () => {
-    try {
-      const result = await axios.get('/api/popular?type=movie');
-      setMedia(result.data.data[random]);
-    } catch (error) {}
-  };
-
   useEffect(() => {
+    const random = Math.floor(Math.random() * 20);
+    const getMedia = async () => {
+      try {
+        const result = await axios.get('/api/popular?type=movie');
+        setMedia(result.data.data[random]);
+      } catch (error) {
+        console.error(error); // Log the error
+      }
+    };
+
     getMedia();
-  }, []);
+  }, []); // Empty array to run only on component mount
 
   return (
     <div className={styles.spotlight}>
-      <img src={media?.banner} alt='spotlight' className={styles.spotlight__image} />
+      <Image
+        src={media?.banner ?? '/login-banner.jpg'}
+        alt="spotlight"
+        className={styles.spotlight__image}
+        fill
+      />      
       <div className={styles.spotlight__details}>
         <div className={styles.title}>{media?.title}</div>
         <div className={styles.synopsis}>{media?.overview}</div>

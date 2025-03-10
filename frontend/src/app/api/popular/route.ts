@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import getInstance from '@/utils/axios';
-import { Media, MediaType } from '@/types';
+import { MediaType } from '@/types';
 import { parse } from '@/utils/apiResolvers';
 
 const apiKey = process.env.TMDB_KEY;
@@ -25,8 +25,13 @@ export async function GET(request: Request) {
 
     const data = parse(result.data.results, type as MediaType);
     return NextResponse.json({ type: 'Success', data });
-  } catch (error: any) {
-    console.error(error);
-    return NextResponse.json({ type: 'Error', data: error.message }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      return NextResponse.json({ type: 'Error', data: error.message }, { status: 500 });
+    } else {
+      console.error('Unexpected error', error);
+      return NextResponse.json({ type: 'Error', data: 'An unexpected error occurred' }, { status: 500 });
+    }
   }
 }

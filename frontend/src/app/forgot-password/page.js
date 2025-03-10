@@ -30,7 +30,7 @@ const ForgotPassword = () => {
       <div className="relative bg-black bg-opacity-80 p-10 rounded-lg text-white max-w-md w-full">
         <h2 className="text-3xl font-bold mb-6">Forgot Password?</h2>
         <p className="text-gray-400 text-sm mb-4">
-          Enter your email, and we'll send you a password reset link.
+        Enter your email, and we&apos;ll send you a password reset link.
         </p>
 
         <form onSubmit={handleReset} className="flex flex-col space-y-4">

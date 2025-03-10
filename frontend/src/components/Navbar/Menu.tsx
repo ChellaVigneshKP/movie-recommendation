@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useRef, useState } from 'react';
 import dynamic from 'next/dynamic';

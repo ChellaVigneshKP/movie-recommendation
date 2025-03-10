@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { RefObject } from 'react';
 import useExternalClick from '@/hooks/useExternalClick';
+import { Maybe } from '@/types';
 
 interface DialogProps {
   readonly visible: boolean;
   readonly classname?: string;
   readonly onClose: () => void;
-  readonly dialogRef: RefObject<any>;
+  readonly dialogRef: RefObject<Maybe<HTMLDivElement>>; // Update this line
   readonly children: React.ReactNode;
 }
 
