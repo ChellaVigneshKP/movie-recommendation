@@ -15,36 +15,39 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    checkout scm
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/main']],
+                        userRemoteConfigs: [[url: 'https://github.com/ChellaVigneshKP/movie-recommendation.git']],
+                        extensions: [[$class: 'CloneOption', depth: 1]]
+                    ])
                 }
             }
         }
 
-        stage('Install Frontend Dependencies') {
-            steps {
-                script {
-                    dir('frontend') {
-                        sh 'npm install'
+        stage('Frontend Build & Test') {
+            parallel {
+                stage('Install Dependencies') {
+                    steps {
+                        dir('frontend') {
+                            retry(3) {
+                                sh 'npm install'
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                script {
-                    dir('frontend') {
-                        sh 'npm run build'
+                stage('Build') {
+                    steps {
+                        dir('frontend') {
+                            sh 'npm run build'
+                        }
                     }
                 }
-            }
-        }
-
-        stage('Run Frontend Tests') {
-            steps {
-                script {
-                    dir('frontend') {
-                        sh 'npm run coverage'
+                stage('Test') {
+                    steps {
+                        dir('frontend') {
+                            sh 'npm run coverage'
+                        }
                     }
                 }
             }
@@ -52,11 +55,11 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                script {
+                timeout(time: 10, unit: 'MINUTES') {
                     dir('frontend') {
                         withSonarQubeEnv('sonar-server') {
                             withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
-                                bat 'npm run sonar:scan -- -Dsonar.token=%SONARQUBE_TOKEN%'
+                                sh 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
                             }
                         }
                     }
@@ -67,12 +70,15 @@ pipeline {
         stage('Free Memory') {
             steps {
                 script {
-                    bat 'taskkill /F /IM node.exe /T || exit 0'
-                    bat 'taskkill /F /IM java.exe /T || exit 0'
+                    try {
+                        bat 'taskkill /F /IM node.exe /T'
+                        bat 'taskkill /F /IM java.exe /T'
+                    } catch (Exception e) {
+                        echo 'No running processes to kill.'
+                    }
                 }
             }
         }
-
     }
 
     post {
