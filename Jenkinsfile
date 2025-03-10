@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     tools {
-        Maven 'Maven 3.9.9'
-        JDK 'JDK 21'
-        SonarQubeScanner 'SonarScanner'
-        NodeJS 'NodeJS 23'
+        maven 'Maven 3.9.9'
+        jdk 'JDK 21'
+        nodejs 'NodeJS 23'
     }
 
     environment {
-        SONARQUBE_SCANNER_PATH = tool name: 'SonarScanner', type: 'ToolType'
+        SONARQUBE_SCANNER_PATH = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     }
 
     stages {
