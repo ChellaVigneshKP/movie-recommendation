@@ -25,14 +25,14 @@ export default function Banner() {
         const result = await axios.get('/api/popular?type=movie');
         setMedia(result.data.data[random]);
       } catch (error) {
-        console.error(error); // Log the error
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
     getMedia();
-  }, []); // Empty array to run only on component mount
+  }, []);
 
   if(loading) return <Loading />;
 
