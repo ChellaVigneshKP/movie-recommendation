@@ -7,11 +7,14 @@ pipeline {
         nodejs 'NodeJS 23'
     }
 
-    environment {
-        SONARQUBE_SCANNER_PATH = tool 'SonarScanner'
-    }
-
     stages {
+
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 script {
@@ -45,6 +48,20 @@ pipeline {
                 script {
                     dir('frontend') {
                         sh 'npm run coverage'
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    dir('frontend') {
+                        withSonarQubeEnv('sonar-server') {
+                            withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
+                                sh 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
+                            }
+                        }
                     }
                 }
             }
