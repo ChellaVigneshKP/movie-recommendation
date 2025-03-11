@@ -7,14 +7,12 @@ pipeline {
         nodejs 'NodeJS 23'
     }
 
-    properties([
+    options{
         buildDiscarder(logRotator(
-            artifactDaysToKeepStr: '',
-            artifactNumToKeepStr: '',
             daysToKeepStr: '10',
             numToKeepStr: '10'
         ))
-    ])
+    }
 
     environment {
         FRONTEND_DIR = 'frontend'
