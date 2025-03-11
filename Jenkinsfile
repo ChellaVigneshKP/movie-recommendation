@@ -58,10 +58,7 @@ pipeline {
                 script {
                     dir('frontend') {
                         withSonarQubeEnv('sonar-server') {
-                            withCredentials([string(credentialsId: 'SONARQUBE_TOKEN', variable: 'SONARQUBE_TOKEN')]) {
-                                // sh 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
-                                sh 'echo Sonar Token: %SONARQUBE_TOKEN%'
-                            }
+                            sh 'npm run sonar:scan'
                         }
                     }
                 }
