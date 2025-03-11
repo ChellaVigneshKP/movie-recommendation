@@ -57,7 +57,12 @@ pipeline {
             steps {
                 script {
                     dir('frontend') {
-                        sh 'npm run sonar:scan -- -Dsonar.token=sqa_f978a55c65fc5253d5f95207aab48366bc634e4b'
+                        withSonarQubeEnv('sonar-server') {
+                            withCredentials([string(credentialsId: 'SONARQUBE_TOKEN', variable: 'SONARQUBE_TOKEN')]) {
+                                // sh 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
+                                sh 'echo "Sonar Token: ${env.SONARQUBE_TOKEN}"'
+                            }
+                        }
                     }
                 }
             }
