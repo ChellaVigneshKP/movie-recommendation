@@ -27,7 +27,14 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
 
   return (
     <div className={style}>
-      <Image src={image} alt='img' className={styles.cardPoster} />
+      <Image
+        src={image}
+        alt="img"
+        className={styles.cardPoster}
+        width={224}
+        height={144}
+        style={{ objectFit: "cover" }}
+      />
       <div className={infoStyle}>
         <div className={styles.actionRow}>
           <div className={styles.actionRow}>

@@ -276,3 +276,50 @@
     background-position: -200% 0;
   }
 }
+
+.scrollContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 15%;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.scrollButton:first-child {
+  left: 1rem;
+}
+
+.scrollButton:last-child {
+  right: 1rem;
+}
+
+.featureCardContainer {
+  .scrollButton {
+    top: 22%;
+  }
+}
+
+.nonDefaultCardContainer {
+  .scrollButton {
+    top: 30%;
+  }
+}
+
+.scrollContainer:hover .scrollButton {
+  opacity: 1;
+}
