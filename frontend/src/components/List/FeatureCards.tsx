@@ -1,9 +1,9 @@
 "use client"
 import { useContext, useState } from 'react';
 import Image from 'next/image';
-import styles from '../../styles/Cards.module.scss';
+import styles from '@/styles/Cards.module.scss';
 import { Genre, Media } from '@/types';
-import { ModalContext } from '../../context/ModalContext';
+import { ModalContext } from '@/context/ModalContext';
 import { Add, Play, Down, Like, Dislike } from '@/utils/icons';
 
 import Button from '../Button';

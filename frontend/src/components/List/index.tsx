@@ -24,7 +24,6 @@ export default function List({
   const [media, setMedia] = useState<Media[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Move the getEndpoint function outside of useEffect to avoid defining it on every render
   const getEndpoint = useCallback(async () => {
     try {
       const baseUrl = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_API_BASE;
@@ -35,19 +34,23 @@ export default function List({
     } finally {
       setLoading(false);
     }
-  }, [endpoint]); // Add endpoint to the dependency array of the callback function
+  }, [endpoint]);
 
   useEffect(() => {
     getEndpoint();
-  }, [getEndpoint]); // Ensure that the hook depends on the updated getEndpoint function
+  }, [getEndpoint]);
 
   return (
     <div className={styles.listContainer}>
       <strong className={styles.category}>{heading}</strong>
       {loading ? (
-        <p>Loading...</p> // <-- Shows loading text
+        <div className={styles.cardRow}>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div key={index} className={styles.skeletonCard}></div>
+          ))}
+        </div>
       ) : media.length === 0 ? (
-        <p>No results found.</p> // <-- Shows fallback text if empty
+        <p>No results found.</p>
       ) : (
         <div className={styles.cardRow}>
           {media.map((item, index) => {

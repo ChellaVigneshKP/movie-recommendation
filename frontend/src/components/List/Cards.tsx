@@ -1,12 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
 import { useContext } from 'react';
 
 import { Genre, Media } from '@/types';
-import styles from '../../styles/Cards.module.scss';
-import { ModalContext } from '../../context/ModalContext';
+import styles from '@/styles/Cards.module.scss';
+import { ModalContext } from '@/context/ModalContext';
 import { Add, Play, Down, Like, Dislike } from '@/utils/icons';
 
-import Button from '../Button';
+import Button from '@/components/Button';
 
 interface CardsProps {
   defaultCard?: boolean;

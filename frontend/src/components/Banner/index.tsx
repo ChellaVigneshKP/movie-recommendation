@@ -6,10 +6,12 @@ import { Media } from '@/types';
 import { Play, Info } from '@/utils/icons';
 import { ModalContext } from '@/context/ModalContext';
 import styles from '@/styles/Banner.module.scss';
+import Loading from '@/components/Loading';
 
 export default function Banner() {
   const [media, setMedia] = useState<Media>();
   const { setModalData, setIsModal } = useContext(ModalContext);
+  const [loading, setLoading] = useState(true);
 
   const onClick = (data: Media) => {
     setModalData(data);
@@ -24,11 +26,15 @@ export default function Banner() {
         setMedia(result.data.data[random]);
       } catch (error) {
         console.error(error); // Log the error
+      } finally {
+        setLoading(false);
       }
     };
 
     getMedia();
   }, []); // Empty array to run only on component mount
+
+  if(loading) return <Loading />;
 
   return (
     <div className={styles.spotlight}>

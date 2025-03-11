@@ -256,3 +256,23 @@
   padding: 0.4rem;
   font-size: inherit;
 }
+
+.skeletonCard {
+  width: 14rem;
+  height: 9rem;
+  background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+  background-size: 200% 100%;
+  animation: loadingAnimation 1.5s infinite;
+  border-radius: 0.28rem;
+  margin-right: 0.3rem;
+  flex-shrink: 0;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
