@@ -32,7 +32,7 @@ export default function Browse(): React.ReactElement {
       <Layout>
         <Navbar isScrolled={isScrolled} />
         <Banner />
-        <div className={styles.contentContainer}>
+        <div className={`${styles.contentContainer} -mb-0 md:-mb-20 lg:-mb-25`}>
           {sections.map((item, index) => {
             return (
               <List
