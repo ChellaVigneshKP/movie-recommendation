@@ -6,6 +6,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { ModalContext } from '@/context/ModalContext';
 import styles from '@/styles/Browse.module.scss';
 import { Section } from '@/types';
+import Footer from '@/components/Footer';
 
 const List = dynamic(() => import('@/components/List'), { ssr: false });
 const Modal = dynamic(() => import('@/components/Modal'), { ssr: false });
@@ -44,6 +45,7 @@ export default function Browse(): React.ReactElement {
             );
           })}
         </div>
+        <Footer />
       </Layout>
     </>
   );
