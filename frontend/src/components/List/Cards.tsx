@@ -4,7 +4,7 @@ import { Genre, Media } from '@/types';
 import styles from '@/styles/Cards.module.scss';
 import { ModalContext } from '@/context/ModalContext';
 import { Add, Play, Down, Like, Dislike } from '@/utils/icons';
-
+import Image from 'next/image';
 import Button from '@/components/Button';
 
 interface CardsProps {
@@ -27,7 +27,7 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
 
   return (
     <div className={style}>
-      <img src={image} alt='img' className={styles.cardPoster} />
+      <Image src={image} alt='img' className={styles.cardPoster} />
       <div className={infoStyle}>
         <div className={styles.actionRow}>
           <div className={styles.actionRow}>
