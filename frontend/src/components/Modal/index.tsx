@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useContext } from 'react';
-import styles from '../../styles/Modal.module.scss';
-import { ModalContext } from '../../context/ModalContext';
+import styles from '@/styles/Modal.module.scss';
+import { ModalContext } from '@/context/ModalContext';
 import { Play, Add, Like, Dislike } from '@/utils/icons';
 import Button from '../Button';
 import { Genre } from '@/types';

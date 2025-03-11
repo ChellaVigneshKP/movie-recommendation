@@ -33,6 +33,9 @@ export function parse(array: MediaElement[], type: MediaType): Media[] {
 }
 
 function getImageUrl(path: string, type: ImageType): string {
+  if (!path) {
+    return '/assets/no-results.jpg';
+  }
   const dimension: string = type === 'poster' ? 'w500' : 'original';
   return `https://image.tmdb.org/t/p/${dimension}${path}`;
 }

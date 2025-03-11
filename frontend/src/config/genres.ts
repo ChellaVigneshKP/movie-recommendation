@@ -1,4 +1,4 @@
-import { Genre, MediaType } from '../types';
+import { Genre, MediaType } from '@/types';
 
 export const genres: Record<MediaType, Genre[]> = {
   [MediaType.MOVIE]: [
