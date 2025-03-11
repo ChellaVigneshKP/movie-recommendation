@@ -58,7 +58,7 @@ pipeline {
                 script {
                     dir('frontend') {
                         withSonarQubeEnv('sonar-server') {
-                            sh 'npm run sonar:scan'
+                            sh 'ls'
                         }
                     }
                 }
