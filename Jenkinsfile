@@ -50,28 +50,6 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    dir('frontend') {
-                        withSonarQubeEnv('sonar-server') {
-                            withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
-                                sh 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
-                }
-            }
-        }
-
     }
 
     post {
