@@ -25,19 +25,25 @@ const SignOut = () => {
 
     return (
         <div className="relative w-full h-screen flex justify-center items-center bg-black text-white">
-            {/* Background Blur */}
             <div className="absolute inset-0 opacity-50">
-                            <Image
-                                src="/signout.jpg"
-                                fill
-                                style={{ objectFit: "cover" }}
-                                alt="Netflix Background"
-                                priority
-                            />
-                        </div>
+                <Image
+                    src="/signout.jpg"
+                    fill
+                    style={{ objectFit: "cover" }}
+                    alt="Netflix Background"
+                    priority
+                />
+            </div>
             <div className="absolute inset-0 opacity-50"></div>
-
-            {/* Sign Out Box */}
+            <div className="absolute top-5 left-5">
+                <Image
+                    src="/logo.png"
+                    alt="My Logo"
+                    width={48}
+                    height={48}
+                    className="h-12 w-auto"
+                />
+            </div>
             <div className="relative bg-black bg-opacity-80 p-10 rounded-lg text-center max-w-md w-full">
                 <h2 className="text-2xl font-bold mb-4">You have been signed out</h2>
                 <p className="text-gray-400 text-sm mb-6">

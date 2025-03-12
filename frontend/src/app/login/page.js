@@ -10,12 +10,10 @@ const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     console.log("Logging in with:", email, password);
-    // Implement login logic here
   };
 
   return (
     <div className="relative w-full h-screen flex justify-center items-center bg-black">
-      {/* Background Image */}
       <div className="absolute inset-0 opacity-50">
         <Image
           src="/login-banner.jpg"
@@ -25,8 +23,16 @@ const LoginPage = () => {
           priority
         />
       </div>
+      <div className="absolute top-5 left-5">
+        <Image
+          src="/logo.png"
+          alt="My Logo"
+          width={48}
+          height={48}
+          className="h-12 w-auto"
+        />
+      </div>
 
-      {/* Login Box */}
       <div className="relative bg-black bg-opacity-80 p-10 rounded-lg text-white max-w-md w-full">
         <h2 className="text-3xl font-bold mb-6">Sign In</h2>
         <form onSubmit={handleLogin} className="flex flex-col space-y-4">

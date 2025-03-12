@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
 import { Media } from '@/types';
 import { ModalContext } from '@/context/ModalContext';
 import styles from '@/styles/Banner.module.scss';
@@ -72,12 +72,10 @@ export default function Banner() {
         <BannerVideo trailerUrl={trailerUrl}/>
       ) : (
         <div className={styles.spotlight__overlay}>
-          <Image
+          <img
             src={media?.banner ?? "/login-banner.jpg"}
             alt="spotlight"
             className={styles.spotlight__image}
-            fill
-            priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>

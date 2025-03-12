@@ -10,7 +10,6 @@ const VerifyEmail = () => {
 
     return (
         <div className="relative w-full h-screen flex justify-center items-center bg-black">
-            {/* Background Image */}
             <div className="absolute inset-0 opacity-50">
                 <Image
                     src="/login-banner.jpg"
@@ -18,6 +17,15 @@ const VerifyEmail = () => {
                     style={{ objectFit: "cover" }}
                     alt="Netflix Background"
                     priority
+                />
+            </div>
+            <div className="absolute top-5 left-5">
+                <Image
+                    src="/logo.png"
+                    alt="My Logo"
+                    width={48}
+                    height={48}
+                    className="h-12 w-auto"
                 />
             </div>
             <div className="absolute top-5 right-5 p-5">

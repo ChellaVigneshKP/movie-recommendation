@@ -1,10 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useContext } from 'react';
 import styles from '@/styles/Modal.module.scss';
 import { ModalContext } from '@/context/ModalContext';
 import { Play, Add, Like, Dislike } from '@/utils/icons';
 import Button from '../Button';
 import { Genre } from '@/types';
-import Image from 'next/image';
 
 export default function Modal() {
   const { modalData, setIsModal, isModal } = useContext(ModalContext);
@@ -15,7 +15,7 @@ export default function Modal() {
       <div className={styles.overlay} onClick={() => setIsModal(false)}></div>
       <div className={styles.modal}>
         <div className={styles.spotlight}>
-          <Image src={banner} alt='spotlight' className={styles.spotlight__image} />
+          <img src={banner} alt='spotlight' className={styles.spotlight__image} />
           <div className={styles.details}>
             <div className={styles.title}>{title}</div>
             <div className={styles.buttonRow}>

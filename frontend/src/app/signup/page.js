@@ -12,7 +12,6 @@ const SignupPage = () => {
     const [isTouched, setIsTouched] = useState(false);
     const [passwordError, setPasswordError] = useState("");
 
-    // Password validation function
     const validatePassword = (password) => {
         const passwordRegex =
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -36,7 +35,6 @@ const SignupPage = () => {
 
     return (
         <div className="relative w-full h-screen flex justify-center items-center bg-black">
-            {/* Background Image */}
             <div className="absolute inset-0 opacity-50">
                 <Image
                     src="/login-banner.jpg"
@@ -46,8 +44,15 @@ const SignupPage = () => {
                     priority
                 />
             </div>
-
-            {/* Sign In Button on Top Right */}
+            <div className="absolute top-5 left-5">
+                <Image
+                    src="/logo.png"
+                    alt="My Logo"
+                    width={48}
+                    height={48}
+                    className="h-12 w-auto"
+                />
+            </div>
             <div className="absolute top-5 right-5 p-5">
                 <button
                     className="bg-red-600 px-4 py-1 rounded-md text-white font-semibold hover:bg-red-700 transition"
