@@ -17,6 +17,9 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
   const infoStyle = defaultCard ? styles.cardInfo : styles.more;
   const { title, poster, banner, rating, genre } = item;
   const image = defaultCard ? banner : poster;
+  const imageSize = defaultCard
+  ? { width: 224, height: 144 }
+  : { width: 224, height: 384 };
 
   const { setModalData, setIsModal } = useContext(ModalContext);
 
@@ -31,8 +34,8 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
         src={image}
         alt="img"
         className={styles.cardPoster}
-        width={224}
-        height={144}
+        width={imageSize.width}
+        height={imageSize.height}
         style={{ objectFit: "cover" }}
       />
       <div className={infoStyle}>

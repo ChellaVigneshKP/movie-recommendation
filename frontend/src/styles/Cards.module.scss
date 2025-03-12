@@ -6,6 +6,7 @@
   flex-direction: column;
   text-transform: capitalize;
   margin-top: -9rem;
+
   @include for-mobile-only {
     margin-top: 0;
   }
@@ -14,6 +15,7 @@
     margin-left: 3rem;
     padding: 0.5rem 0;
     width: fit-content;
+    z-index: 2;
 
     @include fluid-type(0.88rem, 1.6rem);
   }

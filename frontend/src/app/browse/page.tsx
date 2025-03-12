@@ -18,7 +18,7 @@ export default function Browse(): React.ReactElement {
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50); // set a threshold for when isScrolled should be true
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);

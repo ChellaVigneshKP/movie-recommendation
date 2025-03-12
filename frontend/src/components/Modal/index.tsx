@@ -4,6 +4,7 @@ import { ModalContext } from '@/context/ModalContext';
 import { Play, Add, Like, Dislike } from '@/utils/icons';
 import Button from '../Button';
 import { Genre } from '@/types';
+import Image from 'next/image';
 
 export default function Modal() {
   const { modalData, setIsModal, isModal } = useContext(ModalContext);
@@ -14,7 +15,7 @@ export default function Modal() {
       <div className={styles.overlay} onClick={() => setIsModal(false)}></div>
       <div className={styles.modal}>
         <div className={styles.spotlight}>
-          <img src={banner} alt='spotlight' className={styles.spotlight__image} />
+          <Image src={banner} alt='spotlight' className={styles.spotlight__image} />
           <div className={styles.details}>
             <div className={styles.title}>{title}</div>
             <div className={styles.buttonRow}>
