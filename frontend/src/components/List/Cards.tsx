@@ -18,8 +18,8 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
   const { title, poster, banner, rating, genre } = item;
   const image = defaultCard ? banner : poster;
   const imageSize = defaultCard
-  ? { width: 224, height: 144 }
-  : { width: 224, height: 384 };
+    ? { width: 224, height: 144 }
+    : { width: 224, height: 384 };
 
   const { setModalData, setIsModal } = useContext(ModalContext);
 
@@ -55,7 +55,7 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
         <div className={styles.textDetails}>
           <strong>{title}</strong>
           <div className={styles.row}>
-            <span className={styles.greenText}>{`${rating * 10}% match`}</span>
+            <span className={styles.greenText}>{`${Math.round(rating * 10)}% match`}</span>
           </div>
           {renderGenre(genre)}
         </div>

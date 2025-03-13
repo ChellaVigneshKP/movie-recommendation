@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
+import { scrollContainer } from '@/utils/scrollUtils';
 import { Media } from '@/types';
 import styles from '@/styles/Cards.module.scss';
 
@@ -42,17 +42,8 @@ export default function List({
     getEndpoint();
   }, [getEndpoint]);
 
-  const scrollLeft = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -500, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 500, behavior: 'smooth' });
-    }
-  };
+  const scrollLeft = () => scrollContainer(scrollRef as React.RefObject<HTMLDivElement>, "left");
+  const scrollRight = () => scrollContainer(scrollRef as React.RefObject<HTMLDivElement>, "right");
 
   return (
     <div className={styles.listContainermain}>
