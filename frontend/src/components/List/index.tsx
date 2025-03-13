@@ -10,10 +10,10 @@ const Cards = dynamic(() => import('./Cards'));
 const FeatureCard = dynamic(() => import('./FeatureCards'));
 
 interface ListProps {
-  defaultCard?: boolean;
-  heading: string;
-  topList?: boolean;
-  endpoint: string;
+  readonly defaultCard?: boolean;
+  readonly heading: string;
+  readonly topList?: boolean;
+  readonly endpoint: string;
 }
 
 export default function List({
@@ -39,7 +39,11 @@ export default function List({
   }, [endpoint]);
 
   useEffect(() => {
-    getEndpoint();
+    getEndpoint().then(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
+    });
   }, [getEndpoint]);
 
   const scrollLeft = () => scrollContainer(scrollRef as React.RefObject<HTMLDivElement>, "left");
