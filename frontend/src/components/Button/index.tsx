@@ -1,4 +1,4 @@
-import styles from '../../styles/Button.module.scss';
+import styles from '@/styles/Button.module.scss';
 import { IconType } from 'react-icons';
 
 interface ButtonProps {

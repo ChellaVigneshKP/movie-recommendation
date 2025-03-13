@@ -18,12 +18,16 @@ export const handleMouseEnter = (
 
 export const handleMouseLeave = (
   setIsTrailerPlaying: Dispatch<SetStateAction<boolean>>,
-  timerRef: RefObject<NodeJS.Timeout | null>
+  timerRef: RefObject<NodeJS.Timeout | null>,
+  setIsMuted?: Dispatch<SetStateAction<boolean>>
 ) => {
   if (timerRef.current) {
     clearTimeout(timerRef.current);
   }
   setIsTrailerPlaying(false);
+  if (setIsMuted) {
+    setIsMuted(true);
+  }
 };
 
 

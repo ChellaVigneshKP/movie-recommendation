@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import { useContext, useState, useRef } from "react";
 import { Genre, Media } from "@/types";
 import styles from "@/styles/Cards.module.scss";
 import { ModalContext } from "@/context/ModalContext";
 import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
-import Image from "next/image";
 import Button from "@/components/Button";
 import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
 
@@ -44,7 +44,7 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
           allowFullScreen
         />
       ) : (
-        <Image
+        <img
           src={image}
           alt="img"
           className={styles.cardPoster}

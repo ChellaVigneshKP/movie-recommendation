@@ -10,5 +10,6 @@ import {
   IoLogoGithub as Github
 } from 'react-icons/io5';
 import { AiOutlineLike as Like, AiOutlineDislike as Dislike } from 'react-icons/ai';
+import {VscMute as Mute, VscUnmute as Unmute} from 'react-icons/vsc';
 
-export { Info, CaretDown, Play, Search, Notifications, Add, Down, Like, Dislike, Linkedin, Twitter, Github };
+export { Info, CaretDown, Play, Search, Notifications, Add, Down, Like, Dislike, Linkedin, Twitter, Github, Mute, Unmute };

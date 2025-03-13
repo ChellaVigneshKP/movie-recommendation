@@ -1,21 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import styles from '@/styles/Modal.module.scss';
 import { ModalContext } from '@/context/ModalContext';
-import { Play, Add, Like, Dislike } from '@/utils/icons';
+import { Play, Add, Like, Dislike, Mute, Unmute } from '@/utils/icons';
 import Button from '../Button';
 import { Genre } from '@/types';
+import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
 
 export default function Modal() {
   const { modalData, setIsModal, isModal } = useContext(ModalContext);
-  const { title, banner, rating, overview, genre } = modalData;
-
+  const { id, title, banner, rating, overview, genre } = modalData;
+  const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+  const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const toggleMute = () => {
+    if (iframeRef.current) {
+      iframeRef.current.contentWindow?.postMessage(
+        `{"event":"command","func":"${isMuted ? "unMute" : "mute"}","args":""}`,
+        "*"
+      );
+      setIsMuted(!isMuted);
+    }
+  };
   return (
-    <div className={styles.container} style={{ display: isModal ? 'flex' : 'none' }}>
+    <div className={styles.container}
+      style={{ display: isModal ? 'flex' : 'none' }}
+      onMouseEnter={() => handleMouseEnter(setIsTrailerPlaying, setTrailerUrl, timerRef, id)}
+      onMouseLeave={() => handleMouseLeave(setIsTrailerPlaying, timerRef, setIsMuted)}>
       <div className={styles.overlay} onClick={() => setIsModal(false)}></div>
       <div className={styles.modal}>
         <div className={styles.spotlight}>
-          <img src={banner} alt='spotlight' className={styles.spotlight__image} />
+          {isTrailerPlaying && trailerUrl ? (
+            <iframe
+              ref={iframeRef}
+              className={styles.spotlight__trailer}
+              src={`${trailerUrl}?autoplay=1&mute=1&enablejsapi=1`}
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            />
+          ) : (
+            <img
+              src={banner}
+              alt="spotlight"
+              className={styles.spotlight__image}
+            />
+          )}
           <div className={styles.details}>
             <div className={styles.title}>{title}</div>
             <div className={styles.buttonRow}>
@@ -23,6 +54,13 @@ export default function Modal() {
               <Button Icon={Add} rounded />
               <Button Icon={Like} rounded />
               <Button Icon={Dislike} rounded />
+              {isTrailerPlaying && (
+                <Button
+                  Icon={isMuted ? Mute : Unmute}
+                  rounded
+                  onClick={toggleMute}
+                />
+              )}
             </div>
             <div className={styles.greenText}>{rating * 10}% Match</div>
           </div>

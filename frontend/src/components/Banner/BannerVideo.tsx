@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { VolumeX, Volume2 } from "lucide-react";
+import { Mute, Unmute } from "@/utils/icons";
 import styles from "@/styles/Banner.module.scss";
 
 export default function BannerVideo({ trailerUrl }: { trailerUrl: string }) {
@@ -26,7 +26,7 @@ export default function BannerVideo({ trailerUrl }: { trailerUrl: string }) {
                 allowFullScreen
             ></iframe>
             <button onClick={toggleMute} className={styles.muteButton}>
-                {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                {isMuted ? <Mute size={24} /> : <Unmute size={24} />}
             </button>
         </div>
     );
