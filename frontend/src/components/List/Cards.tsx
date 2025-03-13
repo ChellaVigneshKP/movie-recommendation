@@ -1,11 +1,11 @@
-import { useContext } from 'react';
-
-import { Genre, Media } from '@/types';
-import styles from '@/styles/Cards.module.scss';
-import { ModalContext } from '@/context/ModalContext';
-import { Add, Play, Down, Like, Dislike } from '@/utils/icons';
-import Image from 'next/image';
-import Button from '@/components/Button';
+import { useContext, useState, useRef } from "react";
+import { Genre, Media } from "@/types";
+import styles from "@/styles/Cards.module.scss";
+import { ModalContext } from "@/context/ModalContext";
+import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
+import Image from "next/image";
+import Button from "@/components/Button";
+import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
 
 interface CardsProps {
   defaultCard?: boolean;
@@ -17,11 +17,13 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
   const infoStyle = defaultCard ? styles.cardInfo : styles.more;
   const { title, poster, banner, rating, genre } = item;
   const image = defaultCard ? banner : poster;
-  const imageSize = defaultCard
-    ? { width: 224, height: 144 }
-    : { width: 224, height: 384 };
+  const imageSize = defaultCard ? { width: 224, height: 144 } : { width: 224, height: 384 };
 
   const { setModalData, setIsModal } = useContext(ModalContext);
+
+  const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+  const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const onClick = (data: Media) => {
     setModalData(data);
@@ -29,15 +31,29 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
   };
 
   return (
-    <div className={style}>
-      <Image
-        src={image}
-        alt="img"
-        className={styles.cardPoster}
-        width={imageSize.width}
-        height={imageSize.height}
-        style={{ objectFit: "cover" }}
-      />
+    <div
+      className={style}
+      onMouseEnter={() => handleMouseEnter(setIsTrailerPlaying, setTrailerUrl, timerRef, item.id)}
+      onMouseLeave={() => handleMouseLeave(setIsTrailerPlaying, timerRef)}
+    >
+      {isTrailerPlaying && trailerUrl ? (
+        <iframe
+          className={styles.trailer}
+          src={`${trailerUrl}?autoplay=1&mute=1`}
+          allow="autoplay; fullscreen"
+          allowFullScreen
+        />
+      ) : (
+        <Image
+          src={image}
+          alt="img"
+          className={styles.cardPoster}
+          width={imageSize.width}
+          height={imageSize.height}
+          style={{ objectFit: "cover" }}
+        />
+      )}
+
       <div className={infoStyle}>
         <div className={styles.actionRow}>
           <div className={styles.actionRow}>

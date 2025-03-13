@@ -1,13 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState, useContext, useRef } from 'react';
-import axios from 'axios';
-import { Media } from '@/types';
-import { ModalContext } from '@/context/ModalContext';
-import styles from '@/styles/Banner.module.scss';
-import Loading from '@/components/Loading';
-import { getTrailerUrl } from '@/utils/trailerUtils';
-import BannerVideo from './BannerVideo';
-import BannerDetails from './BannerDetails';
+import { useEffect, useState, useContext, useRef } from "react";
+import axios from "axios";
+import { Media } from "@/types";
+import { ModalContext } from "@/context/ModalContext";
+import styles from "@/styles/Banner.module.scss";
+import Loading from "@/components/Loading";
+import { getTrailerUrl } from "@/utils/trailerUtils";
+import BannerVideo from "./BannerVideo";
+import BannerDetails from "./BannerDetails";
+import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
+
 export default function Banner() {
   const [media, setMedia] = useState<Media>();
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export default function Banner() {
     const getMedia = async () => {
       setLoading(true);
       try {
-        const result = await axios.get('/api/popular?type=movie');
+        const result = await axios.get("/api/popular?type=movie");
         const randomIndex = Math.floor(Math.random() * 20);
         const mediaData = result.data.data[randomIndex];
         setMedia(mediaData);
@@ -44,32 +46,24 @@ export default function Banner() {
   }, [hasFetched]);
 
   useEffect(() => {
+    const timer = timerRef.current;
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
+      if (timer) {
+        clearTimeout(timer);
       }
     };
   }, []);
 
-
-  const handleMouseEnter = () => {
-    timerRef.current = setTimeout(() => {
-      setIsTrailerPlaying(true);
-    }, 5000);
-  };
-  const handleMouseLeave = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    setIsTrailerPlaying(false);
-  };
-
   if (loading) return <Loading />;
 
   return (
-    <div className={styles.spotlight} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div
+      className={styles.spotlight}
+      onMouseEnter={() => handleMouseEnter(setIsTrailerPlaying, setTrailerUrl, timerRef, media?.id ?? 0)}
+      onMouseLeave={() => handleMouseLeave(setIsTrailerPlaying, timerRef)}
+    >
       {isTrailerPlaying && trailerUrl ? (
-        <BannerVideo trailerUrl={trailerUrl}/>
+        <BannerVideo trailerUrl={trailerUrl} />
       ) : (
         <div className={styles.spotlight__overlay}>
           <img

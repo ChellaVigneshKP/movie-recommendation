@@ -59,6 +59,17 @@ pipeline {
                     }
                 }
 
+                stage('Lint Frontend') {
+                    steps {
+                        script {
+                            dir(FRONTEND_DIR) {
+                                sh 'npm run lint'
+                            }
+                            echo 'Frontend linting completed!'
+                        }
+                    }
+                }
+
                 stage('Run Frontend Tests') {
                     steps {
                         script {

@@ -1,12 +1,13 @@
-"use client"
-import { useContext, useState } from 'react';
-import Image from 'next/image';
-import styles from '@/styles/Cards.module.scss';
-import { Genre, Media } from '@/types';
-import { ModalContext } from '@/context/ModalContext';
-import { Add, Play, Down, Like, Dislike } from '@/utils/icons';
+"use client";
+import { useContext, useState, useRef } from "react";
+import Image from "next/image";
+import styles from "@/styles/Cards.module.scss";
+import { Genre, Media } from "@/types";
+import { ModalContext } from "@/context/ModalContext";
+import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
+import { handleFeatureMouseEnter, handleFeatureMouseLeave } from "@/utils/mouseUtils"; // Import utility functions
 
-import Button from '../Button';
+import Button from "@/components/Button";
 
 interface FeatureCardProps {
   index: number;
@@ -14,30 +15,42 @@ interface FeatureCardProps {
 }
 
 export default function FeatureCard({ index, item }: FeatureCardProps): React.ReactElement {
-  const { title, poster, banner, rating, genre } = item;
+  const { title, poster, banner, rating, genre, id } = item;
   const [image, setImage] = useState<string>(poster);
-
   const { setModalData, setIsModal } = useContext(ModalContext);
+
+  const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+  const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const onClick = (data: Media) => {
     setModalData(data);
     setIsModal(true);
   };
 
-  const onHover = () => {
-    setImage(banner);
-  };
-
-  const onMouseOut = () => {
-    setImage(poster);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.rank}>{index}</div>
 
-      <div className={styles.featureCard}>
-        <Image src={image} alt='img' width={70} height={70} className={styles.poster} onMouseOver={onHover} onMouseOut={onMouseOut} />
+      <div
+        className={styles.featureCard}
+        onMouseOver={() =>
+          handleFeatureMouseEnter(id, setImage, banner, setTrailerUrl, setIsTrailerPlaying, timerRef)
+        }
+        onMouseOut={() =>
+          handleFeatureMouseLeave(setImage, poster, setTrailerUrl, setIsTrailerPlaying, timerRef)
+        }
+      >
+        {isTrailerPlaying && trailerUrl ? (
+          <iframe
+            className={styles.trailer}
+            src={`${trailerUrl}?autoplay=1&mute=1`}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        ) : (
+          <Image src={image} alt="img" width={70} height={70} className={styles.poster} />
+        )}
 
         <div className={styles.info}>
           <div className={styles.actionRow}>
@@ -47,7 +60,7 @@ export default function FeatureCard({ index, item }: FeatureCardProps): React.Re
               <Button Icon={Like} rounded />
               <Button Icon={Dislike} rounded />
             </div>
-             <Button Icon={Down} rounded onClick={() => onClick(item)} />
+            <Button Icon={Down} rounded onClick={() => onClick(item)} />
           </div>
           <div className={styles.textDetails}>
             <strong>{title}</strong>
