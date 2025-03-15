@@ -5,9 +5,9 @@ import { Notifications } from '@/utils/icons';
 import useDimensions from '@/hooks/useDimensions';
 import styles from '@/styles/Navbar.module.scss';
 
-const Profile = dynamic(() => import('./Profile'), { ssr: false, loading: () => <div>Loading ...</div> });
-const SearchBar = dynamic(() => import('./SearchBar'), { ssr: false, loading: () => <div>Loading ...</div> });
-const Menu = dynamic(() => import('./Menu'), { ssr: false, loading: () => <div>Loading ...</div> });
+const Profile = dynamic(() => import('./Profile'), { ssr: false});
+const SearchBar = dynamic(() => import('./SearchBar'), { ssr: false});
+const Menu = dynamic(() => import('./Menu'), { ssr: false});
 
 
 interface NavbarProps {

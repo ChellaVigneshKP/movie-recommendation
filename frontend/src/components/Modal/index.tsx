@@ -62,7 +62,7 @@ export default function Modal() {
                 />
               )}
             </div>
-            <div className={styles.greenText}>{rating * 10}% Match</div>
+            <div className={styles.greenText}>{`${Math.round(rating * 10)}% Match`}</div>
           </div>
         </div>
 

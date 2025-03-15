@@ -65,7 +65,7 @@ export default function FeatureCard({ index, item }: FeatureCardProps): React.Re
           <div className={styles.textDetails}>
             <strong>{title}</strong>
             <div className={styles.row}>
-              <span className={styles.greenText}>{rating * 10}% Match</span>
+              <span className={styles.greenText}>{`${Math.round(rating * 10)}% Match`}</span>
             </div>
             {renderGenre(genre)}
           </div>

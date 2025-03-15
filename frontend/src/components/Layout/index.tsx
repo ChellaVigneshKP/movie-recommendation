@@ -1,8 +1,8 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-import useScrollLimit from '../../hooks/useScrollLimit';
-import styles from '../../styles/Browse.module.scss';
+import useScrollLimit from '@/hooks/useScrollLimit';
+import styles from '@/styles/Browse.module.scss';
 
 const Footer = dynamic(import('../Footer'));
 const Navbar = dynamic(import('../Navbar'));

@@ -10,7 +10,7 @@ import { CaretDown } from '@/utils/icons';
 import { UserCircle } from 'lucide-react';
 import styles from '@/styles/Navbar.module.scss';
 
-const Dialog = dynamic(() => import('../Dialog'), { ssr: false, loading: () => <div>Loading ...</div> });
+const Dialog = dynamic(() => import('../Dialog'), { ssr: false});
 
 export default function Profile(): React.ReactElement {
   const [visible, setVisible] = useState<boolean>(false);
