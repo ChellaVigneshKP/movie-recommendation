@@ -97,6 +97,7 @@ export type Collection = {
   name: string;
   poster_path: string | null;
   backdrop_path: string | null;
+  overview: string | null;
 };
 
 
@@ -117,3 +118,59 @@ export type CastResponse = {
   type: "Success" | "Error";
   data: CastMember[];
 };
+
+
+export interface CollectionMovie {
+  id: number;
+  title: string;
+  original_title: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  media_type: string;
+  adult: boolean;
+  original_language: string;
+  genre_ids: number[];
+  popularity: number;
+  release_date: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
+export interface CollectionDetails {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  parts: CollectionMovie[];
+}
+
+
+export interface MovieVideo {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+export interface MovieVideosResponse {
+  id: number;
+  results: MovieVideo[];
+}
+
+export interface Video {
+  id: string;
+  name: string;
+  type: string;
+  site: string;
+  url: string | null;
+  published_at: string;
+}

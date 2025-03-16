@@ -3,12 +3,13 @@
 
 import { Play, Star, Heart, Bookmark } from "lucide-react";
 import { Genre, MediaFull } from "@/types";
+import StarRating from "./StarRating";
 
 interface MovieHeaderProps {
     movie: MediaFull;
 }
 
-export default function MovieInfo({ movie }: MovieHeaderProps) {
+export default function MovieHeader({ movie }: MovieHeaderProps) {
     return (
         <div className="relative w-full text-white">
             <div
@@ -67,6 +68,9 @@ export default function MovieInfo({ movie }: MovieHeaderProps) {
                                     <span>Play Trailer</span>
                                 </button>
                             </div>
+                        </div>
+                        <div className="w-full flex justify-start">
+                            <StarRating movieId={movie.id} />
                         </div>
                         <div className="max-w-full sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]">
                             <p className="text-gray-400 italic text-sm sm:text-base">{movie.tagline}</p>

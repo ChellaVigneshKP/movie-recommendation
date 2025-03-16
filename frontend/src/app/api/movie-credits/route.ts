@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        const cast: CastMember[] = result.data.cast.map((member: any) => ({
+        const cast: CastMember[] = result.data.cast.map((member: CastMember) => ({
             id: member.id,
             name: member.name,
             original_name: member.original_name,

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useParams } from "next/navigation";
@@ -7,8 +6,10 @@ import { useEffect, useState } from "react";
 import { MediaFull, CastMember } from "@/types";
 import Loading from "@/components/Loading";
 import CastList from "@/components/Movie/CastList";
-import MovieHeader from "@/components/Movie/MovieInfo";
+import MovieHeader from "@/components/Movie/MovieHeader";
 import Footer from "@/components/Footer";
+import MovieDetailsSection from "@/components/Movie/MovieDetailsSection";
+import VideoList from "@/components/Movie/VideoList";
 const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
 
 export default function MovieDetails() {
@@ -71,6 +72,10 @@ export default function MovieDetails() {
     <div className="relative w-full text-white">
       <Navbar isScrolled={isScrolled} />
       <MovieHeader movie={movie} />
+      <div className='h-2 w-full bg-[#232323]' aria-hidden='true' />
+      <MovieDetailsSection movie={movie} />
+      <div className='h-2 w-full bg-[#232323]' aria-hidden='true' />
+      <VideoList movieId={movie.id} />
       <div className='h-2 w-full bg-[#232323]' aria-hidden='true' />
       <CastList cast={cast} />
       <div className='h-2 w-full bg-[#232323]' aria-hidden='true' />
