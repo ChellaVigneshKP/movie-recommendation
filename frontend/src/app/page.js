@@ -63,7 +63,7 @@ const Home = () => {
               <span>English</span>
             </div>
             <button
-              className="bg-red-600 px-4 py-1 rounded-md text-white font-semibold"
+              className="bg-red-600 px-4 py-1 rounded-md text-white cursor-pointer font-semibold hover:bg-red-700 transition"
               onClick={() => router.push("/login")}
               suppressHydrationWarning
             >
@@ -88,6 +88,7 @@ const Home = () => {
                 value={email}
                 onChange={handleEmailChange}
                 onBlur={handleBlur}
+                onKeyDown={(e) => e.key === "Enter" && handleGetStarted()}
                 suppressHydrationWarning
               />
               <p className="text-red-500 text-sm mt-1 h-5">
@@ -95,7 +96,7 @@ const Home = () => {
               </p>
             </div>
             <button
-              className="bg-red-600 text-white px-6 py-4 rounded-md font-semibold hover:bg-red-700 transition"
+              className="bg-red-600 text-white px-6 py-4 cursor-pointer rounded-md font-semibold hover:bg-red-700 transition"
               onClick={handleGetStarted}
               suppressHydrationWarning
             >

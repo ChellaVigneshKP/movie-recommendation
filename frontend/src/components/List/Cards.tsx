@@ -6,7 +6,7 @@ import { ModalContext } from "@/context/ModalContext";
 import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
 import Button from "@/components/Button";
 import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
-
+import { useRouter } from "next/navigation";
 interface CardsProps {
   defaultCard?: boolean;
   item: Media;
@@ -15,11 +15,15 @@ interface CardsProps {
 export default function Cards({ defaultCard = true, item }: CardsProps): React.ReactElement {
   const style = defaultCard ? styles.card : styles.longCard;
   const infoStyle = defaultCard ? styles.cardInfo : styles.more;
-  const { title, poster, banner, rating, genre } = item;
+  const { id, title, poster, banner, rating, genre } = item;
   const image = defaultCard ? banner : poster;
   const imageSize = defaultCard ? { width: 224, height: 144 } : { width: 224, height: 384 };
 
   const { setModalData, setIsModal } = useContext(ModalContext);
+  const router = useRouter();
+  const handleMoreInfo = () => {
+    router.push(`/movie/${id}`);
+  };
 
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
   const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
@@ -57,7 +61,7 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
       <div className={infoStyle}>
         <div className={styles.actionRow}>
           <div className={styles.actionRow}>
-            <Button Icon={Play} rounded filled />
+            <Button Icon={Play} rounded filled onClick={handleMoreInfo}/>
             <Button Icon={Add} rounded />
             {defaultCard && (
               <>

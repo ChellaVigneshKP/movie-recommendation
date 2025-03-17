@@ -35,8 +35,9 @@ export async function GET(request: NextRequest) {
         }));
 
         return Response.json({ type: "Success", data: cast } as CastResponse, { status: 200 });
-    } catch (error) {
-        console.error("API Fetch Error:", error);
+    }
+    /*eslint-disable-next-line @typescript-eslint/no-unused-vars*/
+    catch (_error) {
         return Response.json({ type: "Error", data: [] } as CastResponse, { status: 500 });
     }
 }

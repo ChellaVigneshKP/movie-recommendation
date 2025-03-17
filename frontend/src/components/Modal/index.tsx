@@ -6,6 +6,7 @@ import { Play, Add, Like, Dislike, Mute, Unmute } from '@/utils/icons';
 import Button from '../Button';
 import { Genre } from '@/types';
 import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
+import { useRouter } from "next/navigation";
 
 export default function Modal() {
   const { modalData, setIsModal, isModal } = useContext(ModalContext);
@@ -15,6 +16,7 @@ export default function Modal() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const router = useRouter();
   const toggleMute = () => {
     if (iframeRef.current) {
       iframeRef.current.contentWindow?.postMessage(
@@ -23,6 +25,9 @@ export default function Modal() {
       );
       setIsMuted(!isMuted);
     }
+  };
+  const handleMoreInfo = () => {
+    router.push(`/movie/${id}`);
   };
   return (
     <div className={styles.container}
@@ -50,7 +55,7 @@ export default function Modal() {
           <div className={styles.details}>
             <div className={styles.title}>{title}</div>
             <div className={styles.buttonRow}>
-              <Button label='Play' filled Icon={Play} />
+              <Button label='Play' filled Icon={Play} onClick={handleMoreInfo}/>
               <Button Icon={Add} rounded />
               <Button Icon={Like} rounded />
               <Button Icon={Dislike} rounded />

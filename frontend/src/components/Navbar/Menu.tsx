@@ -18,9 +18,9 @@ const Dialog = dynamic(() => import("../Dialog"), {
 
 const browseList = [
   { name: "Home", path: "/browse" },
-  { name: "TV Shows", path: "/tv-shows" },
-  { name: "Movies", path: "/movies" },
-  { name: "New & Popular", path: "/new-popular" },
+  { name: "TV Shows", path: "/browse" },
+  { name: "Movies", path: "/browse" },
+  { name: "New & Popular", path: "/browse" },
 ];
 
 export default function Menu() {

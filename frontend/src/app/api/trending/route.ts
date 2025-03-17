@@ -22,12 +22,11 @@ export async function GET(request: NextRequest) {
         watch_region: 'US',
       },
     });
-
     const data = parse(result.data.results, type as MediaType);
-
     return Response.json({ type: 'Success', data }, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return Response.json({ type: 'Error', data: error }, { status: 500 });
+  }
+  /*eslint-disable-next-line @typescript-eslint/no-unused-vars*/
+  catch (_error) {
+    return Response.json({ type: 'Error', data: 'error' }, { status: 500 });
   }
 }

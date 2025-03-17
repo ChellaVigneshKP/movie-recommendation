@@ -21,8 +21,9 @@ export async function GET(request: NextRequest) {
     });
 
     return Response.json({ type: "Success", data: result.data }, { status: 200 });
-  } catch (error) {
-    console.error("API Fetch Error:", error);
-    return Response.json({ type: "Error", data: error }, { status: 500 });
+  }
+  /*eslint-disable-next-line @typescript-eslint/no-unused-vars*/
+  catch (_error) {
+    return Response.json({ type: "Error" }, { status: 500 });
   }
 }

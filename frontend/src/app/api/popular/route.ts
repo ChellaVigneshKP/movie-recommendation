@@ -25,12 +25,11 @@ export async function GET(request: Request) {
 
     const data = parse(result.data.results, type as MediaType);
     return NextResponse.json({ type: 'Success', data });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-      return NextResponse.json({ type: 'Error', data: error.message }, { status: 500 });
+  }
+  catch (_error) {
+    if (_error instanceof Error) {
+      return NextResponse.json({ type: 'Error', data: 'An error occurred' }, { status: 500 });
     } else {
-      console.error('Unexpected error', error);
       return NextResponse.json({ type: 'Error', data: 'An unexpected error occurred' }, { status: 500 });
     }
   }

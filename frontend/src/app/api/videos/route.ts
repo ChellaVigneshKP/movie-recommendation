@@ -39,11 +39,11 @@ export async function GET(request: NextRequest) {
     } else {
       return Response.json({ type: "Error", data: "No videos found" }, { status: 404 });
     }
-  } catch (error) {
-    console.error("Error fetching trailer:", error);
-
+  }
+  /*eslint-disable-next-line @typescript-eslint/no-unused-vars*/
+  catch (_error) {
     return Response.json(
-      { type: "Error", data: (error as Error).message || "Internal Server Error" },
+      { type: "Error", data: "Internal Server Error" },
       { status: 500 }
     );
   }

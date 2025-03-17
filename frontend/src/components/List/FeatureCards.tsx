@@ -6,7 +6,7 @@ import { Genre, Media } from "@/types";
 import { ModalContext } from "@/context/ModalContext";
 import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
 import { handleFeatureMouseEnter, handleFeatureMouseLeave } from "@/utils/mouseUtils"; // Import utility functions
-
+import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 
 interface FeatureCardProps {
@@ -22,6 +22,10 @@ export default function FeatureCard({ index, item }: FeatureCardProps): React.Re
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
   const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
+  const handleMoreInfo = () => {
+    router.push(`/movie/${id}`);
+  };
 
   const onClick = (data: Media) => {
     setModalData(data);
@@ -55,7 +59,7 @@ export default function FeatureCard({ index, item }: FeatureCardProps): React.Re
         <div className={styles.info}>
           <div className={styles.actionRow}>
             <div className={styles.actionRow}>
-              <Button Icon={Play} rounded filled />
+              <Button Icon={Play} rounded filled onClick={handleMoreInfo}/>
               <Button Icon={Add} rounded />
               <Button Icon={Like} rounded />
               <Button Icon={Dislike} rounded />
