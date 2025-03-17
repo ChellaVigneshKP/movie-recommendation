@@ -1,45 +1,36 @@
 @use './_variables.scss' as *;
 @use './mixins.scss' as *;
-
+.notificationWrapper {
+  position: relative;
+  z-index: 5; // ✅ Ensures notifications stay interactive
+}
 .navBar {
-  background-image: linear-gradient(to bottom, $navBar-transparent 10%, $navBar-gradient);
-  transition: all 0.2s ease-out;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  z-index: 100;
+  z-index: 1000;
   position: sticky;
   padding: 0.8rem;
   top: 0;
-  overflow: hidden;
 
   @include for-mobile-only {
-    padding: 0.6rem 0rem;
+    padding: 0.6rem 0;
   }
 
   &__filled {
-    background-image: none;
+    @extend .navBar;
     background-color: $secondary;
-    transition: all 0.2s ease-out;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 100;
-    position: sticky;
-    padding: 0.8rem;
-    top: 0;
+    background-image: none;
+  }
 
-    @include for-mobile-only {
-      padding: 0.6rem 0rem;
-    }  
+  &__left, &__right {
+    display: flex;
+    align-items: center;
   }
 
   &__left {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     margin-left: 3rem;
 
     @include for-mobile-only {
@@ -48,22 +39,17 @@
 
     .browse {
       display: flex;
-      flex-direction: row;
       align-items: center;
-      justify-content: space-around;
       cursor: pointer;
+      position: relative;
     }
 
     .options {
       padding: 0.4rem 0.3rem;
       margin: 0 0.5rem;
       cursor: pointer;
-      transition: linear 200ms ease-in;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      
+      transition: color 200ms ease-in-out;
+
       @include for-mobile-only {
         margin: 0 0.2rem;
       }
@@ -75,14 +61,15 @@
 
     .menu {
       background-color: $secondary;
-      opacity: 0.7 !important;
+      opacity: 0.9;
       color: $white;
       position: absolute;
       top: 3rem;
+      left: 0;
       padding: 0.6rem 0.9rem;
-      margin-left: 6rem;
       border: $button-border solid 1.5px;
       cursor: pointer;
+      z-index: 1001;
 
       &:hover {
         border-color: $white;
@@ -91,9 +78,6 @@
   }
 
   &__right {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     margin-right: 2rem;
     z-index: 50;
 
@@ -105,7 +89,7 @@
       padding: 0.3rem;
       margin: 0 0.2rem;
       cursor: pointer;
-      transition: linear 200ms ease-in;
+      transition: color 200ms ease-in-out;
 
       @include for-mobile-only {
         padding: 0.1rem;
@@ -121,42 +105,40 @@
       font-size: 1.4rem;
       margin: 0 0.7rem;
       cursor: pointer;
-      transition: linear 250ms ease-in-out;
+      transition: transform 250ms ease-in-out, color 200ms ease-in-out;
 
       @include for-mobile-only {
         margin: 0 0.3rem;
       }
 
       &:hover {
-        transform: translateY(-1px);
+        transform: scale(1.1); // Slightly enlarge icon on hover
+        color: $white-hover; // Change color on hover
       }
     }
 
     .searchPanel {
       display: flex;
-      flex-direction: row;
       align-items: center;
       cursor: pointer;
     }
+
     .searchBar {
       background-color: $secondary;
       border: $white-hover solid 1.2px;
       display: flex;
-      flex-direction: row;
       align-items: center;
       font-size: 0.9rem;
 
       &__input {
         padding: 0.4rem;
         outline: none;
-        border-radius: 0;
         background-color: transparent;
         color: $white;
         border: none;
 
         @include for-mobile-only {
           width: 90%;
-          overflow: hidden;
           padding: 0.3rem;
         }
       }
@@ -166,14 +148,13 @@
       padding: 0 0.9rem;
       display: flex;
       align-items: center;
-      flex-direction: row;
       cursor: pointer;
+      position: relative;
 
       .user {
         height: 2rem;
         border-radius: 0.2rem;
         margin-right: 0.3rem;
-        cursor: pointer;
 
         @include for-mobile-only {
           height: 1.7rem;
@@ -182,18 +163,23 @@
 
       .signout {
         background-color: $secondary;
-        opacity: 0.7;
+        opacity: 0.9;
         color: $white;
         position: absolute;
-        margin-top: 6rem;
-        padding: 0.6rem 0.9rem;
-        right: 8;
+        top: 100%;
+        right: 0;
+        padding: 0.6rem 1rem;
         border: $button-border solid 1.5px;
         cursor: pointer;
-        z-index: 40;
+        z-index: 50;
+        white-space: nowrap;
 
         &:hover {
           border-color: $white;
+        }
+        @include for-mobile-only {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.8rem;
         }
       }
     }

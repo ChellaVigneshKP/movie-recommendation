@@ -39,7 +39,7 @@ export default function Footer() {
       <button className={styles.servicecode}>Service Code</button>
 
       {/* Copyright */}
-      <p className={styles.copyright}>© 1997-2025 Netflix, Inc.</p>
+      <p className={styles.copyright}>© 2000-2025 chellavignesh.com</p>
     </footer>
   );
 }

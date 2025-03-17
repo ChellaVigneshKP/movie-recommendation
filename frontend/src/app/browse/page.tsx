@@ -13,9 +13,11 @@ const Modal = dynamic(() => import('@/components/Modal'), { ssr: false });
 const Layout = dynamic(() => import('@/components/Layout'), { ssr: false });
 const Banner = dynamic(() => import('@/components/Banner'), { ssr: false });
 const Navbar = dynamic(() => import('@/components/Navbar'), { ssr: false });
+
 export default function Browse(): React.ReactElement {
   const { isModal } = useContext(ModalContext);
   const [isScrolled, setIsScrolled] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -26,6 +28,7 @@ export default function Browse(): React.ReactElement {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
   return (
     <>
       {isModal && <Modal />}

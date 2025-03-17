@@ -60,7 +60,7 @@ const VerifyEmail = () => {
                 {/* Skip Verification */}
                 <button
                     className="bg-gray-500 p-3 rounded font-semibold w-full mt-3 hover:bg-gray-600 transition"
-                    onClick={() => router.push("/signup/payment")}
+                    onClick={() => router.push("/browse")}
                     suppressHydrationWarning
                 >
                     Skip
