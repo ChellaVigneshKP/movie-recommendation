@@ -24,30 +24,80 @@ export default function List({
 }: ListProps): React.ReactElement {
   const [media, setMedia] = useState<Media[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const getEndpoint = useCallback(async () => {
+
+  // Reset state when endpoint changes
+  useEffect(() => {
+    setMedia([]);
+    setPage(1);
+    setHasMore(true);
+    setLoading(true);
+  }, [endpoint]);
+
+  const getEndpoint = useCallback(async (pageNumber: number) => {
     try {
       const baseUrl = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_API_BASE;
-      const result = await axios.get(`${baseUrl}${endpoint}`);
-      setMedia(result.data.data);
-    } catch (error) {
-      console.error('Error fetching media:', error);
+      const result = await axios.get(`${baseUrl}${endpoint}`, {
+        params: { page: pageNumber }
+      });
+      setMedia(prevMedia => (pageNumber === 1 ? result.data.data : [...prevMedia, ...result.data.data]));
+      setHasMore(result.data.data.length > 0);
+    }
+    /*eslint-disable-next-line @typescript-eslint/no-unused-vars*/
+    catch (error) {
+      console.error('Error fetching media:');
     } finally {
       setLoading(false);
     }
   }, [endpoint]);
 
   useEffect(() => {
-    getEndpoint().then(() => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 300);
-    });
-  }, [getEndpoint]);
+    getEndpoint(page);
+  }, [getEndpoint, page]);
 
-  const scrollLeft = () => scrollContainer(scrollRef as React.RefObject<HTMLDivElement>, "left");
-  const scrollRight = () => scrollContainer(scrollRef as React.RefObject<HTMLDivElement>, "right");
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollContainer(scrollRef, "left");
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollContainer(scrollRef, "right");
+    }
+  };
+
+  const handleScroll = useCallback(() => {
+    if (scrollRef.current && !loading && hasMore) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      if (scrollLeft + clientWidth >= scrollWidth - 100) {
+        setPage(prevPage => prevPage + 1);
+      }
+    }
+  }, [hasMore, loading]);
+
+  const useDebounce = <T extends (...args: unknown[]) => void>(func: T, delay: number) => {
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    return useCallback((...args: Parameters<T>) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => func(...args), delay);
+    }, [func, delay]);
+  };
+
+  const debouncedHandleScroll = useDebounce(handleScroll, 200);
+
+  useEffect(() => {
+    const currentScrollRef = scrollRef.current;
+    if (currentScrollRef) {
+      currentScrollRef.addEventListener('scroll', debouncedHandleScroll);
+      return () => {
+        currentScrollRef.removeEventListener('scroll', debouncedHandleScroll);
+      };
+    }
+  }, [debouncedHandleScroll]);
 
   return (
     <div className={styles.listContainermain}>
@@ -62,7 +112,7 @@ export default function List({
             </button>
           )}
           <div className={styles.cardRow} ref={scrollRef}>
-            {loading ? (
+            {loading && page === 1 ? (
               Array.from({ length: 10 }).map((_, index) => (
                 <div key={index} className={styles.skeletonCard}></div>
               ))
@@ -71,12 +121,13 @@ export default function List({
             ) : (
               media.map((item, index) =>
                 topList && index >= 10 ? null : topList ? (
-                  <FeatureCard key={item.id || index} index={index + 1} item={item} />
+                  <FeatureCard key={`${item.id}-${page}-${index}`} index={index + 1} item={item} />
                 ) : (
-                  <Cards key={item.id || index} defaultCard={defaultCard} item={item} />
+                  <Cards key={`${item.id}-${page}-${index}`} defaultCard={defaultCard} item={item} />
                 )
               )
             )}
+            {loading && page > 1 && <div className={styles.skeletonCard}></div>}
           </div>
           {isHovered && (
             <button className={styles.scrollButton} onClick={scrollRight}>

@@ -1,8 +1,9 @@
-export const scrollContainer = (scrollRef: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
+export const scrollContainer = (scrollRef: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
     const container = scrollRef.current;
     const cards = Array.from(container.children) as HTMLElement[];
     let targetCard: HTMLElement | null = null;
+
     if (direction === "right") {
         targetCard = cards.find(card =>
             card.offsetLeft + card.offsetWidth > container.scrollLeft + container.clientWidth

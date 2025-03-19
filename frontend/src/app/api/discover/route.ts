@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type');
   const genre = searchParams.get('genre');
+  const page = searchParams.get('page');
 
   if (!type) {
     return Response.json({ type: 'Error', data: new Error('Missing type') }, { status: 400 });
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
         with_genres: genre,
         watch_region: 'US',
         with_networks: '213',
+        page: page || 1,
       },
     });
     const data = parse(result.data.results, type as MediaType);
