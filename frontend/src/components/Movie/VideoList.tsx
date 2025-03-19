@@ -53,7 +53,7 @@ export default function VideoList({ movieId }: VideoListProps) {
         try {
           iframe.contentWindow?.postMessage(
             '{"event":"command","func":"pauseVideo","args":""}',
-            "*"
+            "https://www.youtube.com"
           );
         } catch (error) {
           console.warn("Failed to pause video:", error);
@@ -129,7 +129,7 @@ export default function VideoList({ movieId }: VideoListProps) {
                           videoRefs.current[videos.findIndex((v) => v.id === video.id)] = el;
                         }
                       }}
-                      src={`${video.url}?enablejsapi=1&modestbranding=1&rel=0&showinfo=0`}
+                      src={`${video.url}?enablejsapi=1&modestbranding=1&rel=0&showinfo=0&origin=${window.location.origin}`}
                       title={video.name}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen

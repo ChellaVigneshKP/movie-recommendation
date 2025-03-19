@@ -10,7 +10,7 @@ export default function BannerVideo({ trailerUrl }: { trailerUrl: string }) {
         if (iframeRef.current) {
             iframeRef.current.contentWindow?.postMessage(
                 `{"event":"command","func":"${isMuted ? "unMute" : "mute"}","args":""}`,
-                "*"
+                "https://www.youtube.com"
             );
             setIsMuted(!isMuted);
         }
@@ -21,7 +21,7 @@ export default function BannerVideo({ trailerUrl }: { trailerUrl: string }) {
             <iframe
                 ref={iframeRef}
                 className={styles.spotlight__video}
-                src={`${trailerUrl}?autoplay=1&mute=1&enablejsapi=1`}
+                src={`${trailerUrl}?autoplay=1&mute=1&enablejsapi=1&origin=${window.location.origin}`}
                 allow="autoplay; fullscreen"
                 allowFullScreen
             ></iframe>
