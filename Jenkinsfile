@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     dir(FRONTEND_DIR) {
-                        sh 'npm install'
+                        bat 'npm install'
                     }
                     echo 'Dependencies installed successfully!'
                 }
@@ -52,7 +52,7 @@ pipeline {
                     steps {
                         script {
                             dir(FRONTEND_DIR) {
-                                sh 'npm run build'
+                                bat 'npm run build'
                             }
                             echo 'Frontend build completed!'
                         }
@@ -63,7 +63,7 @@ pipeline {
                     steps {
                         script {
                             dir(FRONTEND_DIR) {
-                                sh 'npm run lint'
+                                bat 'npm run lint'
                             }
                             echo 'Frontend linting completed!'
                         }
@@ -74,7 +74,7 @@ pipeline {
                     steps {
                         script {
                             dir(FRONTEND_DIR) {
-                                sh 'npm run coverage'
+                                bat 'npm run coverage'
                             }
                             echo 'Frontend tests executed successfully!'
                         }
@@ -90,7 +90,7 @@ pipeline {
                         withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 timeout(time: 10, unit: 'MINUTES') {
-                                    sh 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
+                                    bat 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
                                 }
                             }
                         }
