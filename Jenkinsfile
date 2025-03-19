@@ -90,7 +90,7 @@ pipeline {
                         withCredentials([string(credentialsId: 'SonarQube-Token', variable: 'SONARQUBE_TOKEN')]) {
                             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                                 timeout(time: 10, unit: 'MINUTES') {
-                                    bat 'npm run sonar:scan -- -Dsonar.token=$SONARQUBE_TOKEN'
+                                    bat 'npm run sonar:scan -- -Dsonar.token=%SONARQUBE_TOKEN%'
                                 }
                             }
                         }
