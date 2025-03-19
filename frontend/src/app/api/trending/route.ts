@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const axios = getInstance();
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type');
-  const time = searchParams.get('time') || 'day'; // Default to "day" if not provided
+  const time = searchParams.get('time') ?? 'day'; // Default to "day" if not provided
 
   if (!type) {
     return Response.json({ type: 'Error', data: new Error('Missing type parameter') }, { status: 400 });

@@ -8,8 +8,8 @@ import Button from "@/components/Button";
 import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
 import { useRouter } from "next/navigation";
 interface CardsProps {
-  defaultCard?: boolean;
-  item: Media;
+  readonly defaultCard?: boolean;
+  readonly item: Media;
 }
 
 export default function Cards({ defaultCard = true, item }: CardsProps): React.ReactElement {
@@ -43,6 +43,7 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
       {isTrailerPlaying && trailerUrl ? (
         <iframe
           className={styles.trailer}
+          title="Trailer Section"
           src={`${trailerUrl}?autoplay=1&mute=1`}
           allow="autoplay; fullscreen"
           allowFullScreen

@@ -2,11 +2,11 @@ import styles from '@/styles/Button.module.scss';
 import { IconType } from 'react-icons';
 
 interface ButtonProps {
-  filled?: boolean;
-  label?: string;
-  Icon: IconType;
-  rounded?: boolean;
-  onClick?: () => void;
+  readonly filled?: boolean;
+  readonly label?: string;
+  readonly Icon: IconType;
+  readonly rounded?: boolean;
+  readonly onClick?: () => void;
 }
 
 export default function Button(props: ButtonProps): React.ReactElement {

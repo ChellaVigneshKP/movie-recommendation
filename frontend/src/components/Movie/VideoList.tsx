@@ -5,7 +5,7 @@ import { Video } from "@/types";
 import { MdOutlineMovie, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 interface VideoListProps {
-  movieId: number;
+  readonly movieId: number;
 }
 
 export default function VideoList({ movieId }: VideoListProps) {
@@ -89,7 +89,7 @@ export default function VideoList({ movieId }: VideoListProps) {
   }, [videos]);  
 
   return (
-    <section role="region" aria-labelledby="video-section-title" className="max-w-full mx-auto px-4 sm:px-6 md:px-12 mt-12 text-white relative">
+    <section aria-labelledby="video-section-title" className="max-w-full mx-auto px-4 sm:px-6 md:px-12 mt-12 text-white relative">
       {/* Video Section Title */}
       <div className="flex items-center gap-2 mb-6 border-b border-gray-700 pb-2">
         <MdOutlineMovie className="text-3xl text-red-500" />

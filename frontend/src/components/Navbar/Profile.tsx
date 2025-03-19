@@ -31,8 +31,8 @@ export default function Profile(): React.ReactElement {
     if (!isDesktop) setVisible((prev) => !prev); // Toggle on click for mobile
   };
 
-  const onSignout = async () => {
-    await router.push(ROUTES.HOME);
+  const onSignout = () => {
+    router.push(ROUTES.HOME);
   };
 
   return (

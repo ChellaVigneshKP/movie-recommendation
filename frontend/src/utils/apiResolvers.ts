@@ -18,7 +18,7 @@ export function parse(array: MediaElement[], type: MediaType): Media[] {
   array.forEach((element: MediaElement): void => {
     const resolved: Media = {
       id: element.id,
-      title: element.name || element.title || 'Untitled',
+      title: element.name ?? element.title ?? 'Untitled',
       rating: element.vote_average,
       overview: element.overview,
       poster: getImageUrl(element.poster_path, 'poster'),

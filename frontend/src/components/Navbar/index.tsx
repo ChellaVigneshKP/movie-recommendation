@@ -10,7 +10,7 @@ const SearchBar = dynamic(() => import("./SearchBar"), { ssr: false });
 const Menu = dynamic(() => import("./Menu"), { ssr: false });
 
 interface NavbarProps {
-  isScrolled: boolean;
+  readonly isScrolled: boolean;
 }
 
 export default function Navbar({ isScrolled }: NavbarProps): React.ReactElement {

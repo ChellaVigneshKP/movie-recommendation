@@ -10,7 +10,7 @@ interface Modal {
 }
 
 interface ModalProviderProps {
-  children: React.ReactNode
+  readonly children: React.ReactNode
 }
 
 export const ModalContext = createContext<Modal>({} as Modal);

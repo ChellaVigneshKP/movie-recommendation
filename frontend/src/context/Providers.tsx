@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 
 // Export a function called Providers that takes in a prop called children
 interface ProvidersProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export function Providers({ children }: ProvidersProps) {

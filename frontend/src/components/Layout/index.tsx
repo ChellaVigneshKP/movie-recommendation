@@ -13,7 +13,7 @@ interface Layout {
 
 const SCROLL_LIMIT: number = 80;
 
-export default function Layout({ children }: Layout) {
+export default function Layout({ children }: Readonly<Layout>) {
   const isScrolled: boolean = useScrollLimit(SCROLL_LIMIT);
   return (
     <div className={styles.container}>

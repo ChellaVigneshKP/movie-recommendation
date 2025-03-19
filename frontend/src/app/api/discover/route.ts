@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         with_genres: genre,
         watch_region: 'US',
         with_networks: '213',
-        page: page || 1,
+        page: page ?? 1,
       },
     });
     const data = parse(result.data.results, type as MediaType);

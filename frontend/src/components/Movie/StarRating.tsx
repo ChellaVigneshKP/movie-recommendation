@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { IoStar as Star} from "react-icons/io5";
 
 interface StarRatingProps {
-  movieId: number;
+  readonly movieId: number;
 }
 
 export default function StarRating({ movieId }: StarRatingProps) {

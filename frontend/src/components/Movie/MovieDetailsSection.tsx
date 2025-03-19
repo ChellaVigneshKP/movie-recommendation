@@ -2,7 +2,7 @@
 import { MediaFull } from "@/types";
 import CollectionDetails from "./CollectionDetails";
 interface MovieDetailsProps {
-    movie: MediaFull;
+    readonly movie: MediaFull;
 }
 
 export default function MovieDetailsSection({ movie }: MovieDetailsProps) {

@@ -14,7 +14,7 @@ interface FeatureCardProps {
   item: Media;
 }
 
-export default function FeatureCard({ index, item }: FeatureCardProps): React.ReactElement {
+export default function FeatureCard({ index, item }: Readonly<FeatureCardProps>): React.ReactElement {
   const { title, poster, banner, rating, genre, id } = item;
   const [image, setImage] = useState<string>(poster);
   const { setModalData, setIsModal } = useContext(ModalContext);
@@ -48,6 +48,7 @@ export default function FeatureCard({ index, item }: FeatureCardProps): React.Re
         {isTrailerPlaying && trailerUrl ? (
           <iframe
             className={styles.trailer}
+            title="Feating a trailer"
             src={`${trailerUrl}?autoplay=1&mute=1`}
             allow="autoplay; fullscreen"
             allowFullScreen

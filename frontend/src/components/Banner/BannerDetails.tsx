@@ -4,8 +4,8 @@ import styles from "@/styles/Banner.module.scss";
 import { Media } from "@/types";
 import { useRouter } from "next/navigation";
 interface BannerDetailsProps {
-  media: Media;
-  onClick: (data: Media) => void;
+  readonly media: Media;
+  readonly onClick: (data: Media) => void;
 }
 
 export default function BannerDetails({ media, onClick }: BannerDetailsProps) {

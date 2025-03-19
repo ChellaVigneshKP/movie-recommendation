@@ -2,7 +2,7 @@ import Image from "next/image";
 import { CastMember } from "@/types";
 
 interface CastListProps {
-  cast: CastMember[];
+  readonly cast: CastMember[];
 }
 
 export default function CastList({ cast }: CastListProps) {

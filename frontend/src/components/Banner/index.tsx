@@ -30,7 +30,12 @@ export default function Banner() {
       setLoading(true);
       try {
         const result = await axios.get("/api/popular?type=movie");
-        const randomIndex = Math.floor(Math.random() * 20);
+        const getRandomIndex = (max: number) => {
+          const array = new Uint32Array(1);
+          window.crypto.getRandomValues(array);
+          return array[0] % max;
+        };
+        const randomIndex = getRandomIndex(20);
         const mediaData = result.data.data[randomIndex];
         setMedia(mediaData);
         setTrailerUrl(await getTrailerUrl(mediaData.id));

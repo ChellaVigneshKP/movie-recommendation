@@ -6,7 +6,7 @@ import { Genre, MediaFull } from "@/types";
 import StarRating from "./StarRating";
 
 interface MovieHeaderProps {
-    movie: MediaFull;
+    readonly movie: MediaFull;
 }
 
 export default function MovieHeader({ movie }: MovieHeaderProps) {
