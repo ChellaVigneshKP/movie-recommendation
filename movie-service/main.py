@@ -13,12 +13,12 @@ from google.cloud import bigquery
 from hvac.exceptions import VaultError
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt,JWTError
-
+from model import RecommendationResponse
 from auth import authenticate_user, create_access_token
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from recommender import build_tfidf_matrix, recommend_similar_movies
-from recommender import get_top_100_recommendations, get_predicted_rating
+from recommender import get_top_100_recommendations, get_predicted_rating, MovieRecommender
 from util import parse_genre_ids, parse_json_fields
 import multipart
 # Load environment variables
@@ -91,6 +91,8 @@ try:
 except Exception as e:
     logger.error("Failed to build TF-IDF matrix: %s", str(e))
     raise
+
+nlp_recommender = MovieRecommender("D:/M.Tech DE/Project/movies_nlp_df.pkl", "D:/M.Tech DE/Project/nlp_similarity_matrix.pkl")
 
 all_movie_ids = ratings_df['movieId'].unique().tolist()
 
@@ -420,3 +422,11 @@ async def recommend(id: int, user_id: int = Depends(get_current_user)):
     movie_data["rating"] = float(rating_result.rating) if rating_result.rating is not None else None
 
     return movie_data
+
+
+@app.get("/recommend/nlp/{title}", response_model=list[RecommendationResponse])
+def get_recommendations(title: str, top_k: int = 5):
+    results = nlp_recommender.recommend(title, top_k)
+    if not results:
+        raise HTTPException(status_code=404, detail=f"No recommendations found for '{title}'")
+    return results
