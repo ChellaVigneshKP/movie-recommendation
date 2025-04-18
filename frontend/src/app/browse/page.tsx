@@ -56,49 +56,49 @@ export default function Browse(): React.ReactElement {
 
 const sections: Section[] = [
   {
-    heading: 'Popular on Nextflix',
-    endpoint: '/api/popular?type=tv'
+    heading: 'ALS Based Recommendations',
+    endpoint: '/api/recommendation?type=als'
   },
   {
-    heading: 'Horror Movies',
-    endpoint: '/api/discover?type=movie&genre=27'
+    heading: 'SVD Based Recommendations',
+    endpoint: '/api/recommendation?type=svd'
   },
   {
     heading: 'Only on Nextflix',
-    endpoint: '/api/discover?type=tv',
+    endpoint: '/api/recommendation?type=als',
     defaultCard: false
   },
   {
     heading: 'Trending Now',
-    endpoint: '/api/trending?type=movie&time=week'
+    endpoint: '/api/recommendation?type=als'
   },
   {
     heading: 'Comedies',
-    endpoint: '/api/discover?type=movie&genre=35'
+    endpoint: '/api/recommendation?type=als'
   },
   {
     heading: 'Top 10 in US Today',
-    endpoint: '/api/trending?type=tv&time=day',
+    endpoint: '/api/recommendation?type=als',
     topList: true
   },
   {
     heading: 'Action',
-    endpoint: '/api/discover?type=movie&genre=28'
+    endpoint: '/api/recommendation?type=als'
   },
   {
     heading: 'TV Sci-Fi and Horror',
-    endpoint: '/api/discover?type=tv&genre=10765'
+    endpoint: '/api/recommendation?type=als'
   },
   {
     heading: 'Mystery Movies',
-    endpoint: '/api/discover?type=movie&genre=9648'
+    endpoint: '/api/recommendation?type=als'
   },
   {
     heading: 'Animation',
-    endpoint: '/api/discover?type=tv&genre=16'
+    endpoint: '/api/recommendation?type=als'
   },
   {
     heading: 'Drama',
-    endpoint: '/api/discover?type=movie&genre=18'
+    endpoint: '/api/recommendation?type=als'
   }
 ];

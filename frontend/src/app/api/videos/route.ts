@@ -1,11 +1,11 @@
 import { NextRequest } from "next/server";
-import getInstance from "@/utils/axios";
+import {getImdbInstance} from "@/utils/axios";
 import { MovieVideosResponse, MovieVideo, Video } from "@/types";
 
 const apiKey = process.env.TMDB_KEY;
 
 export async function GET(request: NextRequest) {
-  const axios = getInstance();
+  const axios = getImdbInstance();
   const { searchParams } = new URL(request.url);
   const movieId = searchParams.get("movieId");
 

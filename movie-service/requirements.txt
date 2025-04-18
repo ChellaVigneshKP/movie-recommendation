@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+hvac
+python-dotenv
+google-cloud-bigquery
+google-auth

@@ -8,13 +8,14 @@ import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
 import { handleFeatureMouseEnter, handleFeatureMouseLeave } from "@/utils/mouseUtils"; // Import utility functions
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
-
+import { getModelType } from "@/utils/modelMap";
 interface FeatureCardProps {
   index: number;
   item: Media;
+  readonly sectionHeading: string;
 }
 
-export default function FeatureCard({ index, item }: Readonly<FeatureCardProps>): React.ReactElement {
+export default function FeatureCard({ index, item,sectionHeading }: Readonly<FeatureCardProps>): React.ReactElement {
   const { title, poster, banner, rating, genre, id } = item;
   const [image, setImage] = useState<string>(poster);
   const { setModalData, setIsModal } = useContext(ModalContext);
@@ -24,7 +25,8 @@ export default function FeatureCard({ index, item }: Readonly<FeatureCardProps>)
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const handleMoreInfo = () => {
-    router.push(`/movie/${id}`);
+    const modelType = getModelType(sectionHeading);
+    router.push(`/movie/${id}/?type=${modelType}`);
   };
 
   const onClick = (data: Media) => {

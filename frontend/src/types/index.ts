@@ -22,7 +22,7 @@ export type Genre = {
 
 export enum MediaType {
   MOVIE = 'movie',
-  TV = 'tv'
+  TV = 'tv',
 }
 
 export type Media = {
@@ -90,6 +90,8 @@ export type MediaFull = {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  rating: number;
+  predicted_rating: number;
 };
 
 export type Collection = {

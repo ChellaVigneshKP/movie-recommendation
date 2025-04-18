@@ -7,12 +7,14 @@ import { Add, Play, Down, Like, Dislike } from "@/utils/icons";
 import Button from "@/components/Button";
 import { handleMouseEnter, handleMouseLeave } from "@/utils/mouseUtils";
 import { useRouter } from "next/navigation";
+import { getModelType } from "@/utils/modelMap";
 interface CardsProps {
   readonly defaultCard?: boolean;
   readonly item: Media;
+  readonly sectionHeading: string;
 }
 
-export default function Cards({ defaultCard = true, item }: CardsProps): React.ReactElement {
+export default function Cards({ defaultCard = true, item, sectionHeading }: CardsProps): React.ReactElement {
   const style = defaultCard ? styles.card : styles.longCard;
   const infoStyle = defaultCard ? styles.cardInfo : styles.more;
   const { id, title, poster, banner, rating, genre } = item;
@@ -22,7 +24,8 @@ export default function Cards({ defaultCard = true, item }: CardsProps): React.R
   const { setModalData, setIsModal } = useContext(ModalContext);
   const router = useRouter();
   const handleMoreInfo = () => {
-    router.push(`/movie/${id}`);
+    const modelType = getModelType(sectionHeading);
+    router.push(`/movie/${id}?type=${modelType}`);
   };
 
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);

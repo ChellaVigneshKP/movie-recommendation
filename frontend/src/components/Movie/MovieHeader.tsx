@@ -7,9 +7,10 @@ import StarRating from "./StarRating";
 
 interface MovieHeaderProps {
     readonly movie: MediaFull;
-}
+    readonly onPlayTrailer?: () => void;
+  }
 
-export default function MovieHeader({ movie }: MovieHeaderProps) {
+  export default function MovieHeader({ movie, onPlayTrailer }: MovieHeaderProps) {
     return (
         <div className="relative w-full text-white">
             <div
@@ -61,7 +62,7 @@ export default function MovieHeader({ movie }: MovieHeaderProps) {
 
                             <div className="w-full sm:w-auto">
                                 <button
-                                    onClick={() => alert("Trailer Clicked!")}
+                                    onClick={onPlayTrailer}
                                     className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 text-sm sm:text-base font-medium bg-white text-black rounded-md shadow-md hover:bg-gray-200 transition w-full sm:w-auto justify-center"
                                 >
                                     <Play size={18} />
@@ -70,7 +71,9 @@ export default function MovieHeader({ movie }: MovieHeaderProps) {
                             </div>
                         </div>
                         <div className="w-full flex justify-start">
-                            <StarRating movieId={movie.id} />
+                            <StarRating movieId={movie.id} 
+                            rating={movie.rating ?? 0}
+                            predicted_rating={movie.predicted_rating ?? 0}/>
                         </div>
                         <div className="max-w-full sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]">
                             <p className="text-gray-400 italic text-sm sm:text-base">{movie.tagline}</p>

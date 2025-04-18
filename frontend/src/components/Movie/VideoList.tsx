@@ -1,20 +1,33 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
 import { Video } from "@/types";
 import { MdOutlineMovie, MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 interface VideoListProps {
   readonly movieId: number;
 }
+export interface VideoListHandle {
+  scrollToAndPlay: () => void;
+}
 
-export default function VideoList({ movieId }: VideoListProps) {
+const VideoList = forwardRef<VideoListHandle, VideoListProps>(({ movieId }, ref) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState<number | null>(null);
   const videoRefs = useRef<(HTMLIFrameElement | null)[]>([]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    scrollToAndPlay: () => {
+      sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        handlePlay(0);
+      }, 600); // Delay to ensure scroll completes
+    },
+  }));
 
   useEffect(() => {
     const controller = new AbortController();
@@ -89,7 +102,7 @@ export default function VideoList({ movieId }: VideoListProps) {
   }, [videos]);  
 
   return (
-    <section aria-labelledby="video-section-title" className="max-w-full mx-auto px-4 sm:px-6 md:px-12 mt-12 text-white relative">
+    <section ref={sectionRef} aria-labelledby="video-section-title" className="max-w-full mx-auto px-4 sm:px-6 md:px-12 mt-12 text-white relative">
       {/* Video Section Title */}
       <div className="flex items-center gap-2 mb-6 border-b border-gray-700 pb-2">
         <MdOutlineMovie className="text-3xl text-red-500" />
@@ -158,4 +171,5 @@ export default function VideoList({ movieId }: VideoListProps) {
       )}
     </section>
   );
-}
+});
+export default VideoList;

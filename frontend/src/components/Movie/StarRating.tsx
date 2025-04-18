@@ -1,30 +1,44 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { IoStar as Star} from "react-icons/io5";
+import { IoStar as Star } from "react-icons/io5";
 
 interface StarRatingProps {
   readonly movieId: number;
+  readonly rating?: number;
+  readonly predicted_rating?: number;
 }
 
-export default function StarRating({ movieId }: StarRatingProps) {
-  const [rating, setRating] = useState<number>(0);
+export default function StarRating({
+  movieId,
+  rating = 0,
+  predicted_rating = 0,
+}: StarRatingProps) {
+  const [userRating, setUserRating] = useState<number>(rating);
   const [hover, setHover] = useState<number | null>(null);
 
-  useEffect(() => {
-    const savedRating = localStorage.getItem(`movie-rating-${movieId}`);
-    if (savedRating) {
-      setRating(parseFloat(savedRating));
-    }
-  }, [movieId]);
-
   const handleRating = (value: number) => {
-    setRating(value);
-    localStorage.setItem(`movie-rating-${movieId}`, value.toString());
+    setUserRating(value);
   };
 
   return (
     <div className="flex flex-col items-center text-white">
+      {/* Display the actual rating if it exists */}
+      {rating > 0 && (
+        <div className="text-sm text-gray-300 mb-2">
+          <span>Actual Rating: </span>
+          <span className="font-semibold">{rating.toFixed(1)}</span>
+        </div>
+      )}
+
+      {/* Display the predicted rating if it exists */}
+      {predicted_rating > 0 && (
+        <div className="text-sm text-gray-300 mb-2">
+          <span>Predicted Rating: </span>
+          <span className="font-semibold">{predicted_rating.toFixed(1)}</span>
+        </div>
+      )}
+
       {/* Star Rating Display */}
       <div className="flex items-center gap-1">
         {Array.from({ length: 5 }, (_, i) => i + 1).map((star) => (
@@ -39,13 +53,13 @@ export default function StarRating({ movieId }: StarRatingProps) {
             <Star
               size={32}
               className={`transition-colors duration-300 ${
-                (hover ?? rating) >= star ? "text-yellow-400" : "text-gray-500"
+                (hover ?? userRating) >= star ? "text-yellow-400" : "text-gray-500"
               }`}
             />
           </button>
         ))}
         <span className="ml-2 text-sm font-medium text-gray-300">
-          {rating > 0 ? rating.toFixed(1) : "Rate"}
+          {userRating > 0 ? userRating.toFixed(1) : "Rate"}
         </span>
       </div>
 
@@ -56,7 +70,7 @@ export default function StarRating({ movieId }: StarRatingProps) {
           min="0"
           max="5"
           step="0.1"
-          value={rating}
+          value={userRating}
           onChange={(e) => handleRating(parseFloat(e.target.value))}
           className="w-44 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-yellow-400 transition-all focus:outline-none"
         />
