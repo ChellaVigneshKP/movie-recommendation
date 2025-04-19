@@ -19,5 +19,5 @@ class MovieRecommender:
 
         scores = list(enumerate(self.similarity_matrix[idx]))
         sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)[1:top_k + 1]
-        results = self.df.iloc[[i[0] for i in sorted_scores]][['title', 'overview', 'genre_text']]
+        results = self.df.iloc[[i[0] for i in sorted_scores]][['movieId','title', 'overview', 'genre_text']]
         return results.to_dict(orient="records")

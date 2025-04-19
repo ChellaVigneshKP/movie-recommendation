@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import {getImdbInstance, getInstance} from "@/utils/axios";
+import { getImdbInstance, getInstance } from "@/utils/axios";
 const apiKey = process.env.TMDB_KEY;
 export async function GET(request: NextRequest) {
   const axiosImdb = getImdbInstance();
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const id = searchParams.get("id");
   const type = searchParams.get("type");
 
-  if (!id||!type) {
+  if (!id || !type) {
     return Response.json({ type: "Error", data: "Missing movie ID" }, { status: 400 });
   }
 
@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
         headers: {
           Authorization: token ?? "",
         },
-      });      return Response.json({ type: "Success", data: result.data }, { status: 200 });
+      }); 
+      return Response.json({ type: "Success", data: result.data }, { status: 200 });
     } else {
       const result = await axiosImdb.get(`/movie/${id}`, {
         params: {

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import {getInstance} from '@/utils/axios';
+import { getInstance } from '@/utils/axios';
 import { parse } from '@/utils/apiResolvers';
 import { MediaType } from '@/types';
 
@@ -12,7 +12,12 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const response = await axios.get(`/recommend/${query}`);
+        const token = request.headers.get("authorization");
+        const response = await axios.get(`/search/${query}`, {
+            headers: {
+                Authorization: token ?? "",
+            },
+        });
         const data = parse(response.data.data, MediaType.MOVIE);
         return Response.json({ type: 'Success', data }, { status: 200 });
 

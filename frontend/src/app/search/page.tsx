@@ -41,7 +41,12 @@ export default function SearchResults() {
     const fetchResults = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(title)}`);
+        const token = localStorage.getItem("token");
+        const res = await fetch(`/api/search?q=${encodeURIComponent(title)}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const json = await res.json();
         setResults(json.data || []);
       } catch (error) {

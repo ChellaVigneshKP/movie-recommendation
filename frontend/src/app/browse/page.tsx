@@ -64,8 +64,8 @@ const sections: Section[] = [
     endpoint: '/api/recommendation?type=svd'
   },
   {
-    heading: 'Only on Nextflix',
-    endpoint: '/api/recommendation?type=als',
+    heading: 'Based on Your Recent Searches',
+    endpoint: '/api/recommendation?type=nlp',
     defaultCard: false
   },
   {
