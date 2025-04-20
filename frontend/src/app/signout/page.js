@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const SignOut = () => {
-    localStorage.removeItem("token");
     const router = useRouter();
     const [countdown, setCountdown] = useState(30);
 
     useEffect(() => {
+        localStorage.removeItem("token");
+
         const interval = setInterval(() => {
             setCountdown((prev) => prev - 1);
         }, 1000);

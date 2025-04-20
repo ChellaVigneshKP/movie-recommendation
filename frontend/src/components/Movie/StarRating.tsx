@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IoStar as Star } from "react-icons/io5";
 
 interface StarRatingProps {
@@ -16,7 +16,7 @@ export default function StarRating({
 }: StarRatingProps) {
   const [userRating, setUserRating] = useState<number>(rating);
   const [hover, setHover] = useState<number | null>(null);
-
+  console.debug("Movie ID:", movieId);
   const handleRating = (value: number) => {
     setUserRating(value);
   };

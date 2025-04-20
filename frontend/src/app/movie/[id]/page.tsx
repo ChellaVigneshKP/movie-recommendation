@@ -63,7 +63,7 @@ export default function MovieDetails() {
 
     fetchMovieData();
     fetchCastData();
-  }, [id]);
+  }, [id, type]);
 
   useEffect(() => {
     const handleScroll = () => {

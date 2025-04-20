@@ -68,37 +68,37 @@ const sections: Section[] = [
     endpoint: '/api/recommendation?type=nlp',
     defaultCard: false
   },
-  {
-    heading: 'Trending Now',
-    endpoint: '/api/recommendation?type=als'
-  },
-  {
-    heading: 'Comedies',
-    endpoint: '/api/recommendation?type=als'
-  },
-  {
-    heading: 'Top 10 in US Today',
-    endpoint: '/api/recommendation?type=als',
-    topList: true
-  },
-  {
-    heading: 'Action',
-    endpoint: '/api/recommendation?type=als'
-  },
-  {
-    heading: 'TV Sci-Fi and Horror',
-    endpoint: '/api/recommendation?type=als'
-  },
-  {
-    heading: 'Mystery Movies',
-    endpoint: '/api/recommendation?type=als'
-  },
-  {
-    heading: 'Animation',
-    endpoint: '/api/recommendation?type=als'
-  },
-  {
-    heading: 'Drama',
-    endpoint: '/api/recommendation?type=als'
-  }
+  // {
+  //   heading: 'Trending Now',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Comedies',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Top 10 in US Today',
+  //   endpoint: '/api/recommendation?type=als',
+  //   topList: true
+  // },
+  // {
+  //   heading: 'Action',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'TV Sci-Fi and Horror',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Mystery Movies',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Animation',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Drama',
+  //   endpoint: '/api/recommendation?type=als'
+  // }
 ];

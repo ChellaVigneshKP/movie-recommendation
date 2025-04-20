@@ -172,4 +172,5 @@ const VideoList = forwardRef<VideoListHandle, VideoListProps>(({ movieId }, ref)
     </section>
   );
 });
+VideoList.displayName = "VideoList";
 export default VideoList;
