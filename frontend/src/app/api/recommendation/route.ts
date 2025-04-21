@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ type: 'Error', data: 'Missing Authorization token' }, { status: 401 });
   }
 
-  if (!type || !['als', 'svd', 'nlp'].includes(type)) {
+  if (!type || !['als', 'svd', 'nlp','deepmatch'].includes(type)) {
     return Response.json({ type: 'Error', data: 'Invalid or missing type' }, { status: 400 });
   }
 

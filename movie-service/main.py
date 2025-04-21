@@ -1,15 +1,15 @@
 import json
 import logging
 import os
-from collections import defaultdict
+import urllib.parse
 from datetime import datetime, timezone
 from math import ceil
+from random import shuffle
 from typing import List
 
+import httpx
 import hvac
-import urllib.parse
-from redis.asyncio import Redis
-from redis.exceptions import ConnectionError, RedisError
+import pandas as pd
 from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi import Query
@@ -20,10 +20,12 @@ from google.auth import exceptions as google_exceptions
 from google.cloud import bigquery
 from hvac.exceptions import VaultError
 from jose import jwt, JWTError
+from redis.asyncio import Redis
+from redis.exceptions import ConnectionError
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from auth import authenticate_user, create_access_token
-from model import RecommendationResponse
+from model import RecommendationResponse, MovieQuery
 from recommender import build_tfidf_matrix, recommend_similar_movies
 from recommender import get_top_100_recommendations, get_predicted_rating, MovieRecommender
 from util import parse_genre_ids, parse_json_fields
@@ -93,6 +95,8 @@ try:
     TABLE_ID = vault_data["table_metadata"]
     USER_TABLE = vault_data["user_table"]
     RATINGS_TABLE = vault_data["ratings_table"]
+    DEEP_API = vault_data["deep_api"]
+    ALS_TABLE = vault_data["als_table"]
 
     logger.info("Successfully loaded BigQuery configuration: Project=%s, Dataset=%s",
                 PROJECT_ID, DATASET_ID)
@@ -112,9 +116,9 @@ try:
 
     # Load ratings data
     logger.debug("Loading initial ratings data from BigQuery")
-    query = """
+    query = f"""
     SELECT userId, movieId, rating
-    FROM `virtualization-and-cloud.movies.ratings`
+    FROM `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}`
     """
     ratings_df = bigquery_client.query(query).to_dataframe()
     all_movie_ids = ratings_df['movieId'].unique().tolist()
@@ -342,7 +346,7 @@ def get_recommendations_als(
     # Count total recommendations
     count_query = f"""
     SELECT COUNT(*) as total
-    FROM `{PROJECT_ID}.{DATASET_ID}.recommendationsALS`
+    FROM `{PROJECT_ID}.{DATASET_ID}.{ALS_TABLE}`
     WHERE userId = {user_id}
     """
 
@@ -361,7 +365,7 @@ def get_recommendations_als(
     query = f"""
     WITH recs AS (
         SELECT movieId, predicted_rating
-        FROM `{PROJECT_ID}.{DATASET_ID}.recommendationsALS`
+        FROM `{PROJECT_ID}.{DATASET_ID}.{ALS_TABLE}`
         WHERE userId = {user_id}
     ),
     ratings AS (
@@ -369,7 +373,7 @@ def get_recommendations_als(
         MAX(IF(userId = {user_id}, rating, NULL)) AS rating,
         COUNT(*) AS vote_count,
         AVG(rating) AS vote_average
-        FROM `{PROJECT_ID}.{DATASET_ID}.ratings`
+        FROM `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}`
         GROUP BY movieId
     ),
     combined AS (
@@ -470,7 +474,7 @@ def recommend_movies_svd(
             COUNT(r.rating) AS vote_count,
             AVG(r.rating) AS vote_average
         FROM `{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}` m
-        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.ratings` r
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}` r
         ON m.movieId = r.movieId
         WHERE m.movieId IN ({movie_ids_str})
         GROUP BY 
@@ -555,7 +559,7 @@ async def recommend(id: int, user_id: int = Depends(get_current_user)):
                 AVG(rating) AS vote_average,
                 COUNT(*) AS vote_count,
                 MAX(IF(userId = {user_id}, rating, NULL)) AS rating
-            FROM `{PROJECT_ID}.{DATASET_ID}.ratings`
+            FROM `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}`
             WHERE movieId = {movie_id}
         """
 
@@ -594,14 +598,11 @@ def get_recommendations(title: str, top_k: int = 5):
         raise HTTPException(status_code=500, detail=f"Error generating recommendations: {str(e)}")
 
 
-from random import shuffle
-from math import ceil
-
 @app.get("/recommendations/nlp")
 async def get_user_search_recommendations(
-    user_id: int = Depends(get_current_user),
-    page: int = Query(1, ge=1),
-    per_page: int = 20
+        user_id: int = Depends(get_current_user),
+        page: int = Query(1, ge=1),
+        per_page: int = 20
 ):
     """Get NLP-based recommendations based on user's search history from Redis"""
     logger.info(f"Fetching NLP recommendations for user_id: {user_id}, page: {page}")
@@ -656,7 +657,7 @@ async def get_user_search_recommendations(
             COUNT(r.rating) AS vote_count,
             AVG(r.rating) AS vote_average
         FROM `{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}` m
-        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.ratings` r
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}` r
         ON m.movieId = r.movieId
         WHERE m.movieId IN ({movie_ids_str})
         GROUP BY 
@@ -692,3 +693,151 @@ async def get_user_search_recommendations(
     except Exception as e:
         logger.error(f"Error fetching NLP recommendations for user {user_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Error processing search-based recommendations")
+
+
+@app.get("/recommendations/deepmatch")
+async def proxy_deepmatch_recommend2(
+    user_id: int = Depends(get_current_user),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, ge=1),
+):
+    logger.info(f"[START] Deepmatch recommendation process | user_id={user_id}, page={page}, per_page={per_page}")
+
+    logger.debug("Filtering top-rated movies for user from ratings DataFrame")
+    user_ratings = ratings_df[ratings_df["userId"] == user_id]
+    if user_ratings.empty:
+        logger.warning(f"[NO_RATINGS] No ratings found for user_id={user_id} in ratings_df")
+        raise HTTPException(status_code=404, detail="No ratings found for user")
+
+    top_rated = user_ratings.sort_values(by="rating", ascending=False).head(10)
+    movie_ids = top_rated["movieId"].tolist()
+    logger.info(f"[TOP_RATED] Retrieved top {len(movie_ids)} rated movies for user_id={user_id}")
+
+    logger.debug(f"[BQ_QUERY] Fetching metadata for top-rated movies: {movie_ids}")
+    movie_query = f"""
+    SELECT *
+    FROM `{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}`
+    WHERE movieId IN UNNEST(@movie_ids)
+    """
+    movie_job_config = bigquery.QueryJobConfig(
+        query_parameters=[bigquery.ArrayQueryParameter("movie_ids", "INT64", movie_ids)]
+    )
+    movies_df = bigquery_client.query(movie_query, job_config=movie_job_config).to_dataframe()
+
+    if movies_df.empty:
+        logger.warning(f"[NO_METADATA] Metadata query returned no results for top-rated movies: {movie_ids}")
+        raise HTTPException(status_code=404, detail="No metadata found for top-rated movies")
+
+    logger.debug(f"[MERGE] Merging ratings with metadata for {len(movies_df)} movies")
+    merged_df = pd.merge(top_rated, movies_df, on="movieId", how="inner")
+
+    logger.info(f"[DEEPMATCH_REQUESTS] Sending Deepmatch requests for {len(merged_df)} movies")
+    recommended_ids = set()
+
+    async with httpx.AsyncClient() as client:
+        for _, row in merged_df.iterrows():
+            movie_title = row.get("title", "")
+            try:
+                movie_payload = MovieQuery(
+                    title=movie_title,
+                    overview=row.get("overview", ""),
+                    tagline=row.get("tagline", ""),
+                    original_language=row.get("original_language", "en"),
+                    status=row.get("status", "Released"),
+                    runtime=row.get("runtime", 90.0),
+                    vote_average=row.get("vote_average", 0.0),
+                    vote_count=row.get("vote_count", 0.0),
+                    popularity=row.get("popularity", 0.0),
+                    top_k=11
+                )
+
+                logger.debug(f"[DEEPMATCH_CALL] Requesting similar movies for: '{movie_title}'")
+                response = await client.post(
+                    DEEP_API,
+                    json=movie_payload.model_dump()
+                )
+                response.raise_for_status()
+
+                recs = response.json()["recommendations"]
+                added = 0
+                for rec in recs:
+                    if rec["title"].strip().lower() != movie_title.strip().lower():
+                        recommended_ids.add(rec["movieId"])
+                        added += 1
+                logger.info(f"[DEEPMATCH_SUCCESS] Received {len(recs)} recs, {added} new added for '{movie_title}'")
+
+            except Exception as e:
+                logger.error(f"[DEEPMATCH_FAIL] Deepmatch failed for '{movie_title}': {str(e)}")
+                continue
+
+    if not recommended_ids:
+        logger.info(f"[NO_RECOMMENDATIONS] No recommendations returned from Deepmatch for user_id={user_id}")
+        return {"page": page, "results": [], "total_pages": 0, "total_results": 0}
+
+    movie_ids_list = list(recommended_ids)
+    total_results = len(movie_ids_list)
+    total_pages = ceil(total_results / per_page)
+    offset = (page - 1) * per_page
+    paginated_ids = movie_ids_list[offset:offset + per_page]
+    if not paginated_ids:
+        logger.warning(f"[PAGINATION] Page {page} exceeds available data. Total pages: {total_pages}")
+        return {
+            "page": page,
+            "results": [],
+            "total_pages": total_pages,
+            "total_results": total_results
+        }
+
+    logger.info(f"[PAGINATION] Total={total_results}, Pages={total_pages}, Returning={len(paginated_ids)}")
+
+    movie_ids_str = ",".join(map(str, paginated_ids))
+    logger.debug(f"[BQ_QUERY] Fetching metadata for paginated recommended movie IDs: {movie_ids_str}")
+
+    query = f"""
+    SELECT
+        m.movieId,
+        m.id,
+        m.title,
+        m.original_title,
+        m.overview,
+        m.poster_path,
+        m.backdrop_path,
+        m.genres,
+        m.adult,
+        m.video,
+        m.original_language,
+        COUNT(r.rating) AS vote_count,
+        AVG(r.rating) AS vote_average
+    FROM `{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}` m
+    LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}` r
+    ON m.movieId = r.movieId
+    WHERE m.movieId IN ({movie_ids_str})
+    GROUP BY
+        m.movieId, m.id, m.title, m.original_title, m.overview,
+        m.poster_path, m.backdrop_path, m.genres, m.adult,
+        m.video, m.original_language
+    """
+    query_job = bigquery_client.query(query)
+    metadata_results = {row["movieId"]: dict(row) for row in query_job.result()}
+    logger.debug(f"[BQ_RESULT] Retrieved metadata for {len(metadata_results)} recommended movies")
+
+    results = []
+    for movie_id in paginated_ids:
+        metadata = metadata_results.get(movie_id, {})
+        genre_ids = parse_genre_ids(metadata.pop("genres", [])) if "genres" in metadata else []
+        results.append({
+            "predicted_rating": None,
+            "rating": None,
+            "vote_average": metadata.get("vote_average"),
+            "vote_count": metadata.get("vote_count"),
+            "genre_ids": genre_ids,
+            **metadata
+        })
+
+    logger.info(f"[COMPLETE] Returning {len(results)} recommendations for user_id={user_id}")
+    return {
+        "page": page,
+        "results": results,
+        "total_pages": total_pages,
+        "total_results": total_results
+    }

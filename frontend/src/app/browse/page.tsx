@@ -68,10 +68,10 @@ const sections: Section[] = [
     endpoint: '/api/recommendation?type=nlp',
     defaultCard: false
   },
-  // {
-  //   heading: 'Trending Now',
-  //   endpoint: '/api/recommendation?type=als'
-  // },
+  {
+    heading: 'Deep Learning Based Recommendations',
+    endpoint: '/api/recommendation?type=deepmatch'
+  },
   // {
   //   heading: 'Comedies',
   //   endpoint: '/api/recommendation?type=als'
