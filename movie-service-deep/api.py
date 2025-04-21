@@ -38,7 +38,7 @@ class MovieQuery(BaseModel):
     popularity: float
     top_k: int = 5
 
-@app.post("/api/deep")
+@app.post("/api/deepmatch")
 def recommend_movies(query: MovieQuery):
     logger.info("Received recommendation request.")
 

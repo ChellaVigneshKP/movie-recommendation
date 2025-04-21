@@ -1,1 +1,1 @@
-from .schema import RecommendationResponse
+from .schema import RecommendationResponse, MovieQuery
