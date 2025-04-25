@@ -72,15 +72,11 @@ const sections: Section[] = [
     heading: 'Deep Learning Based Recommendations',
     endpoint: '/api/recommendation?type=deepmatch'
   },
-  // {
-  //   heading: 'Comedies',
-  //   endpoint: '/api/recommendation?type=als'
-  // },
-  // {
-  //   heading: 'Top 10 in US Today',
-  //   endpoint: '/api/recommendation?type=als',
-  //   topList: true
-  // },
+  {
+    heading: 'Top 10 NCF',
+    endpoint: '/api/recommendation?type=ncf',
+    topList: true
+  },
   // {
   //   heading: 'Action',
   //   endpoint: '/api/recommendation?type=als'

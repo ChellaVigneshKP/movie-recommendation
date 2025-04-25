@@ -3,6 +3,7 @@ export const modelMap: Record<string, string> = {
     "ALS Based Recommendations": "als",
     "Based on Your Recent Searches": "nlp",
     "Deep Learning Based Recommendations": "deepmatch",
+    "Top 10 NCF": "ncf",
 };
 
 export function getModelType(sectionHeading: string): string {

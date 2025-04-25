@@ -27,7 +27,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from auth import authenticate_user, create_access_token
 from model import RecommendationResponse, MovieQuery
 from recommender import build_tfidf_matrix, recommend_similar_movies
-from recommender import get_top_100_recommendations, get_predicted_rating, MovieRecommender
+from recommender import get_top_100_recommendations, get_predicted_rating, MovieRecommender, MovieRecommenderNCF
 from util import parse_genre_ids, parse_json_fields
 
 # Load environment variables
@@ -110,26 +110,36 @@ except Exception as e:
     raise
 
 # Initialize BigQuery client
-logger.info("Initializing BigQuery client for project: %s", PROJECT_ID)
+logger.info("Starting BigQuery client initialization for project: %s", PROJECT_ID)
+
 try:
+    # Step 1: Initialize client
+    logger.debug("Attempting to create BigQuery client...")
     bigquery_client = bigquery.Client(project=PROJECT_ID)
+    logger.info("BigQuery client initialized successfully.")
 
-    # Load ratings data
-    logger.debug("Loading initial ratings data from BigQuery")
-    query = f"""
-    SELECT userId, movieId, rating
-    FROM `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}`
+    # Step 2: Load ratings
+    logger.debug("Querying ratings from table: %s.%s.%s", PROJECT_ID, DATASET_ID, RATINGS_TABLE)
+    ratings_query = f"""
+        SELECT userId, movieId, rating
+        FROM `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}`
     """
-    ratings_df = bigquery_client.query(query).to_dataframe()
+    ratings_df = bigquery_client.query(ratings_query).to_dataframe()
+    logger.info("Loaded %d ratings covering %d unique movies",
+                len(ratings_df), ratings_df['movieId'].nunique())
     all_movie_ids = ratings_df['movieId'].unique().tolist()
+    # Step 3: Load movies
+    logger.debug("Querying movie metadata from table: %s.%s.movies", PROJECT_ID, DATASET_ID)
+    movies_query = f"SELECT * FROM `{PROJECT_ID}.{DATASET_ID}.movies`"
+    movies_raw_df = bigquery_client.query(movies_query).to_dataframe()
+    logger.info("Loaded metadata for %d movies", len(movies_raw_df))
 
-    logger.info("BigQuery client initialized successfully. Loaded %d ratings for %d unique movies",
-                len(ratings_df), len(all_movie_ids))
 except google_exceptions.DefaultCredentialsError as e:
     logger.critical("BigQuery authentication error: %s", str(e))
     raise HTTPException(status_code=500, detail=f"Error initializing BigQuery client: {str(e)}")
+
 except Exception as e:
-    logger.critical("Error initializing BigQuery client: %s", str(e), exc_info=True)
+    logger.critical("Unexpected error while initializing BigQuery client or loading data: %s", str(e), exc_info=True)
     raise HTTPException(status_code=500, detail=f"Error initializing BigQuery client: {str(e)}")
 
 # Precompute TF-IDF matrix
@@ -153,6 +163,17 @@ try:
     logger.info("NLP recommender initialized successfully")
 except Exception as e:
     logger.critical("Failed to initialize NLP recommender: %s", str(e), exc_info=True)
+    raise
+
+logger.info("Initializing NCF-based recommender system")
+try:
+    model_path = "D:/M.Tech DE/SEMESTER 1/Machine Learning with Big Data/Assignment 3/entire_model.pt"
+    movies_path = "D:/M.Tech DE/Project/MLBD Project/data/ml-latest/movies.csv"
+    ratings_path = "D:/M.Tech DE/Project/MLBD Project/data/ml-latest/ratings.csv"
+    ncf_recommender = MovieRecommenderNCF(model_path, movies_path, ratings_path)
+    logger.info("NCF-based recommender initialized successfully")
+except Exception as e:
+    logger.critical("Failed to initialize NCF recommender: %s", str(e), exc_info=True)
     raise
 
 # Initialize Redis client
@@ -835,6 +856,90 @@ async def proxy_deepmatch_recommend2(
         })
 
     logger.info(f"[COMPLETE] Returning {len(results)} recommendations for user_id={user_id}")
+    return {
+        "page": page,
+        "results": results,
+        "total_pages": total_pages,
+        "total_results": total_results
+    }
+
+
+@app.get("/recommendations/ncf")
+async def ncf_recommend(
+    user_id: int = Depends(get_current_user),
+    page: int = Query(1, ge=1),
+    per_page: int = Query(10, ge=1)
+):
+    logger.info(f"[MODEL_RECOMMEND] Fetching recommendations for user_id={user_id}")
+    try:
+        recommendations = ncf_recommender.recommend_for_user(user_id=user_id, top_k=10)
+    except Exception as e:
+        logger.error(f"[MODEL_ERROR] Error fetching recommendations: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error fetching recommendations")
+    if not recommendations:
+        logger.warning(f"[NO_RECS] No recommendations for user_id={user_id}")
+        return {"page": page, "results": [], "total_pages": 0, "total_results": 0}
+    movie_ids = [int(rec[0]) for rec in recommendations]
+    ratings_dict = {int(rec[0]): float(rec[1]) for rec in recommendations}
+    total_results = len(movie_ids)
+    total_pages = ceil(total_results / per_page)
+    offset = (page - 1) * per_page
+    paginated_ids = movie_ids[offset:offset + per_page]
+
+    if not paginated_ids:
+        return {
+            "page": page,
+            "results": [],
+            "total_pages": total_pages,
+            "total_results": total_results
+        }
+
+    # Fetch metadata from BigQuery
+    bq_client = bigquery.Client()
+    movie_ids_str = ",".join(map(str, paginated_ids))
+
+    query = f"""
+        SELECT
+            m.movieId,
+            m.id,
+            m.title,
+            m.original_title,
+            m.overview,
+            m.poster_path,
+            m.backdrop_path,
+            m.genres,
+            m.adult,
+            m.video,
+            m.original_language,
+            COUNT(r.rating) AS vote_count,
+            AVG(r.rating) AS vote_average
+        FROM `{PROJECT_ID}.{DATASET_ID}.{TABLE_ID}` m
+        LEFT JOIN `{PROJECT_ID}.{DATASET_ID}.{RATINGS_TABLE}` r
+        ON m.movieId = r.movieId
+        WHERE m.movieId IN ({movie_ids_str})
+        GROUP BY
+            m.movieId, m.id, m.title, m.original_title, m.overview,
+            m.poster_path, m.backdrop_path, m.genres, m.adult,
+            m.video, m.original_language
+        """
+    query_job = bq_client.query(query)
+    metadata_results = {row["movieId"]: dict(row) for row in query_job.result()}
+
+    results = []
+    for movie_id in paginated_ids:
+        metadata = metadata_results.get(movie_id, {})
+        if not metadata:
+            continue
+        genre_ids = parse_genre_ids(metadata.pop("genres", [])) if "genres" in metadata else []
+        results.append({
+            "predicted_rating": round(ratings_dict.get(movie_id, 0), 2),
+            "rating": None,
+            "vote_average": metadata.get("vote_average"),
+            "vote_count": metadata.get("vote_count"),
+            "genre_ids": genre_ids,
+            **metadata
+        })
+
     return {
         "page": page,
         "results": results,
