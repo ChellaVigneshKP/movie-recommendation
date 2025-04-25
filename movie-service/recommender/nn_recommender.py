@@ -1,15 +1,19 @@
-import torch
+import __main__ as main
+
 import numpy as np
 import pandas as pd
+import torch
 from sklearn.preprocessing import MultiLabelBinarizer
+
 from .nn_model import RecommenderNet
-import __main__ as main
+
+
 class MovieRecommenderNCF:
-    def __init__(self, model_path, movies_path, ratings_path, device=None):
+    def __init__(self, model_path, movies_df, ratings_df, device=None):
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model_path = model_path
-        self.movies_path = movies_path
-        self.ratings_path = ratings_path
+        self.movies_df = movies_df
+        self.ratings_df = ratings_df
         self.model = None
         self.movies = None
         self.ratings = None
@@ -22,13 +26,13 @@ class MovieRecommenderNCF:
 
     def _load_data(self):
         """Load and preprocess the raw data"""
-        self.movies = pd.read_csv(self.movies_path)
-        self.ratings = pd.read_csv(self.ratings_path)
+        self.movies = self.movies_df
+        self.ratings = self.ratings_df
 
     def _load_model(self):
         """Load the trained model"""
         main.RecommenderNet = RecommenderNet
-        self.model = torch.load(self.model_path, map_location=self.device,weights_only=False).to(self.device)
+        self.model = torch.load(self.model_path, map_location=self.device, weights_only=False).to(self.device)
         self.model.eval()
 
     def _prepare_features(self):

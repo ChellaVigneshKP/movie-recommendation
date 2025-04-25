@@ -168,9 +168,7 @@ except Exception as e:
 logger.info("Initializing NCF-based recommender system")
 try:
     model_path = "D:/M.Tech DE/SEMESTER 1/Machine Learning with Big Data/Assignment 3/entire_model.pt"
-    movies_path = "D:/M.Tech DE/Project/MLBD Project/data/ml-latest/movies.csv"
-    ratings_path = "D:/M.Tech DE/Project/MLBD Project/data/ml-latest/ratings.csv"
-    ncf_recommender = MovieRecommenderNCF(model_path, movies_path, ratings_path)
+    ncf_recommender = MovieRecommenderNCF(model_path, movies_raw_df, ratings_df)
     logger.info("NCF-based recommender initialized successfully")
 except Exception as e:
     logger.critical("Failed to initialize NCF recommender: %s", str(e), exc_info=True)
@@ -718,9 +716,9 @@ async def get_user_search_recommendations(
 
 @app.get("/recommendations/deepmatch")
 async def proxy_deepmatch_recommend2(
-    user_id: int = Depends(get_current_user),
-    page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1),
+        user_id: int = Depends(get_current_user),
+        page: int = Query(1, ge=1),
+        per_page: int = Query(20, ge=1),
 ):
     logger.info(f"[START] Deepmatch recommendation process | user_id={user_id}, page={page}, per_page={per_page}")
 
@@ -866,9 +864,9 @@ async def proxy_deepmatch_recommend2(
 
 @app.get("/recommendations/ncf")
 async def ncf_recommend(
-    user_id: int = Depends(get_current_user),
-    page: int = Query(1, ge=1),
-    per_page: int = Query(10, ge=1)
+        user_id: int = Depends(get_current_user),
+        page: int = Query(1, ge=1),
+        per_page: int = Query(10, ge=1)
 ):
     logger.info(f"[MODEL_RECOMMEND] Fetching recommendations for user_id={user_id}")
     try:
