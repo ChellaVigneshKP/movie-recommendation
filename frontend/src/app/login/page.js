@@ -7,10 +7,38 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", email, password);
+    try {
+      const response = await fetch("http://localhost:8799/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+  
+      const data = await response.json();
+      localStorage.setItem("token", data.access_token); // You can also store in cookies
+  
+      // Optional: Store user email or any ID you want to keep
+      localStorage.setItem("username", email);
+  
+      // Redirect to a secure page
+      router.push("/browse"); // or wherever your homepage is
+    } catch (err) {
+      console.error("Login failed:", err.message);
+      alert("Login failed: " + err.message);
+    }
   };
+  
 
   return (
     <div className="relative w-full h-screen flex justify-center items-center bg-black">

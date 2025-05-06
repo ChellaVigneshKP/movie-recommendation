@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { parse } from '@/utils/apiResolvers';
 import { MediaType } from '@/types';
-import getInstance from '@/utils/axios';
+import {getInstance} from '@/utils/axios';
 
 const apiKey = process.env.TMDB_KEY;
 

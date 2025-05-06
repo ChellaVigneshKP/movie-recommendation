@@ -29,7 +29,12 @@ export default function Banner() {
     const getMedia = async () => {
       setLoading(true);
       try {
-        const result = await axios.get("/api/popular?type=movie");
+        const token = localStorage.getItem("token");
+        const result = await axios.get("/api/recommendation?type=als", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token in Authorization header
+          },
+        });
         const getRandomIndex = (max: number) => {
           const array = new Uint32Array(1);
           window.crypto.getRandomValues(array);

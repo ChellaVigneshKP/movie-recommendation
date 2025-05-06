@@ -9,6 +9,8 @@ const SignOut = () => {
     const [countdown, setCountdown] = useState(30);
 
     useEffect(() => {
+        localStorage.removeItem("token");
+
         const interval = setInterval(() => {
             setCountdown((prev) => prev - 1);
         }, 1000);

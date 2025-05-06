@@ -1,6 +1,6 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
-
+import {useRouter} from 'next/navigation';
 import useExternalClick from '@/hooks/useExternalClick';
 import { Search } from '@/utils/icons';
 import useDimensions from '@/hooks/useDimensions';
@@ -12,6 +12,7 @@ export default function SearchBar(): React.ReactElement {
   const [isSearch, setIsSearch] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>('');
   const { isMobile } = useDimensions();
+  const router = useRouter();
 
   const onSearchActive = (): void => {
     setIsSearch(true);
@@ -23,6 +24,13 @@ export default function SearchBar(): React.ReactElement {
 
   const onSearchQuery = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(target.value);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && searchInput.trim() !== '') {
+      // Navigate to search results page
+      router.push(`/search?title=${encodeURIComponent(searchInput.trim())}`);
+    }
   };
 
   return (
@@ -49,6 +57,7 @@ export default function SearchBar(): React.ReactElement {
           value={searchInput}
           onChange={onSearchQuery}
           placeholder='Titles, people, genres'
+          onKeyDown={handleKeyPress}
         />
       </motion.div>
       {!isSearch && <Search className={styles.icon} onMouseOver={onSearchActive} />}

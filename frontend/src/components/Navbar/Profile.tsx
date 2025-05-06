@@ -32,6 +32,7 @@ export default function Profile(): React.ReactElement {
   };
 
   const onSignout = () => {
+    localStorage.removeItem("token");
     router.push(ROUTES.HOME);
   };
 

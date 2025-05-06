@@ -40,8 +40,12 @@ export default function List({
   const getEndpoint = useCallback(async (pageNumber: number) => {
     try {
       const baseUrl = typeof window !== "undefined" ? "" : process.env.NEXT_PUBLIC_API_BASE;
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const result = await axios.get(`${baseUrl}${endpoint}`, {
-        params: { page: pageNumber }
+        params: { page: pageNumber },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       setMedia(prevMedia => (pageNumber === 1 ? result.data.data : [...prevMedia, ...result.data.data]));
       setHasMore(result.data.data.length > 0);
@@ -121,9 +125,9 @@ export default function List({
             ) : (
               media.map((item, index) =>
                 topList && index >= 10 ? null : topList ? (
-                  <FeatureCard key={`${item.id}-${page}-${index}`} index={index + 1} item={item} />
+                  <FeatureCard key={`${item.id}-${page}-${index}`} index={index + 1} item={item} sectionHeading={heading} />
                 ) : (
-                  <Cards key={`${item.id}-${page}-${index}`} defaultCard={defaultCard} item={item} />
+                  <Cards key={`${item.id}-${page}-${index}`} defaultCard={defaultCard} item={item} sectionHeading={heading} />
                 )
               )
             )}

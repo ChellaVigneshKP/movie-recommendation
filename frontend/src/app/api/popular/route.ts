@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import getInstance from '@/utils/axios';
+import {getInstance} from '@/utils/axios';
 import { MediaType } from '@/types';
 import { parse } from '@/utils/apiResolvers';
 

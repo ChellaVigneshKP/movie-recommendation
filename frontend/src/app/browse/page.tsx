@@ -56,49 +56,45 @@ export default function Browse(): React.ReactElement {
 
 const sections: Section[] = [
   {
-    heading: 'Popular on Nextflix',
-    endpoint: '/api/popular?type=tv'
+    heading: 'ALS Based Recommendations',
+    endpoint: '/api/recommendation?type=als'
   },
   {
-    heading: 'Horror Movies',
-    endpoint: '/api/discover?type=movie&genre=27'
+    heading: 'SVD Based Recommendations',
+    endpoint: '/api/recommendation?type=svd'
   },
   {
-    heading: 'Only on Nextflix',
-    endpoint: '/api/discover?type=tv',
+    heading: 'Based on Your Recent Searches',
+    endpoint: '/api/recommendation?type=nlp',
     defaultCard: false
   },
   {
-    heading: 'Trending Now',
-    endpoint: '/api/trending?type=movie&time=week'
+    heading: 'Deep Learning Based Recommendations',
+    endpoint: '/api/recommendation?type=deepmatch'
   },
   {
-    heading: 'Comedies',
-    endpoint: '/api/discover?type=movie&genre=35'
-  },
-  {
-    heading: 'Top 10 in US Today',
-    endpoint: '/api/trending?type=tv&time=day',
+    heading: 'Top 10 NCF',
+    endpoint: '/api/recommendation?type=ncf',
     topList: true
   },
-  {
-    heading: 'Action',
-    endpoint: '/api/discover?type=movie&genre=28'
-  },
-  {
-    heading: 'TV Sci-Fi and Horror',
-    endpoint: '/api/discover?type=tv&genre=10765'
-  },
-  {
-    heading: 'Mystery Movies',
-    endpoint: '/api/discover?type=movie&genre=9648'
-  },
-  {
-    heading: 'Animation',
-    endpoint: '/api/discover?type=tv&genre=16'
-  },
-  {
-    heading: 'Drama',
-    endpoint: '/api/discover?type=movie&genre=18'
-  }
+  // {
+  //   heading: 'Action',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'TV Sci-Fi and Horror',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Mystery Movies',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Animation',
+  //   endpoint: '/api/recommendation?type=als'
+  // },
+  // {
+  //   heading: 'Drama',
+  //   endpoint: '/api/recommendation?type=als'
+  // }
 ];

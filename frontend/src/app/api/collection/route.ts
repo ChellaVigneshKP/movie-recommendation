@@ -1,10 +1,10 @@
 import { NextRequest } from "next/server";
-import getInstance from "@/utils/axios";
+import {getImdbInstance} from "@/utils/axios";
 
 const apiKey = process.env.TMDB_KEY;
 
 export async function GET(request: NextRequest) {
-  const axios = getInstance();
+  const axios = getImdbInstance();
   const { searchParams } = new URL(request.url);
   const collectionId = searchParams.get("id");
 

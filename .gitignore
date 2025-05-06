@@ -1,1 +1,92 @@
-.vscode
+# Virtual environments (anywhere)
+**/venv/
+**/.env/
+**/.venv/
+**/env/
+**/ENV/
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
+**/*.so
+
+# Jupyter notebook checkpoints
+**/.ipynb_checkpoints/
+
+# VS Code / PyCharm
+**/.vscode/
+**/.idea/
+
+# OS-generated files
+**/.DS_Store
+**/Thumbs.db
+
+# Secrets (anywhere)
+**/.env
+**/secrets/
+**/*.key
+**/*.pem
+**/*.p12
+
+# PyInstaller
+**/*.spec
+**/dist/
+**/build/
+
+# Logs
+**/*.log
+
+# Data
+**/*.db
+**/*.sqlite3
+**/*.h5
+**/*.parquet
+**/*.csv
+**/*.tsv
+**/*.json
+
+# Models / Embeddings / Pickles
+**/*.pkl
+**/*.joblib
+**/*.pt
+**/*.npy
+**/*.npz
+
+# SentenceTransformer cache
+**/sentence_transformers/
+
+# FAISS Index
+**/*.index
+**/*.faiss
+
+# Static & media files
+**/static/
+**/media/
+
+# Docker
+**/*.dockerfile
+**/*.tar
+**/docker-compose.override.yml
+
+# pytest / test cache
+**/.pytest_cache/
+**/.cache/
+
+# MyPy / Pylint / type-checking
+**/.mypy_cache/
+**/.dmypy.json
+**/.pyre/
+**/.pytype/
+
+# Coverage / testing
+**/htmlcov/
+**/.coverage
+**/.tox/
+**/.nox/
+**/coverage.xml
+**/*.cover
+
+# Build artifacts
+**/site/
+**/*.egg-info/
+**/.eggs/
