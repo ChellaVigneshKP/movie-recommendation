@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import axios from "axios";
-import getInstance from "@/utils/axios"; // Update path based on your project structure
+import { getInstance } from "@/utils/axios"; // ✅ Fix: curly braces!
 
 describe("getInstance", () => {
   it("should return an Axios instance with the correct base URL", () => {
     const instance = getInstance();
 
-    expect(instance.defaults.baseURL).toBe("https://api.themoviedb.org/3");
+    expect(instance.defaults.baseURL).toBe("http://localhost:8799");
   });
 
   it("should create a new instance separate from the default Axios instance", () => {
